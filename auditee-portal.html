@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMS | Auditee Response Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auditee-theme">
+    <div class="portal-container">
+        <header class="portal-header">
+            <img src="https://www.supertram.com/images/logo.png" alt="Supertram" class="sidebar-logo">
+            <div class="timer-box">
+                <span id="daysRemaining">Calculating...</span>
+                <p>Until Automatic Major NC</p>
+            </div>
+        </header>
+
+        <main class="glass-card">
+            <div id="introSection">
+                <h1 id="auditTitle">Audit Questionnaire</h1>
+                <p id="auditRef"></p>
+                <div class="mandatory-fields">
+                    <input type="text" id="auditeeName" placeholder="Full Name of Auditee" required>
+                    <input type="text" id="deptName" placeholder="Department Name" required>
+                    <input type="date" id="commencementDate" required title="Commencement Date">
+                </div>
+            </div>
+
+            <hr>
+
+            <form id="questionnaireForm">
+                <div id="questionsContainer">
+                    </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="AuditeePortal.saveProgress()">Save Progress</button>
+                    <button type="button" class="btn-primary" onclick="AuditeePortal.submitFinal()">Submit Final Questionnaire</button>
+                </div>
+            </form>
+        </main>
+    </div>
+    <script src="scripts/aiQuestionBank.js"></script>
+    <script src="scripts/auditeePortal.js"></script>
+</body>
+</html>
