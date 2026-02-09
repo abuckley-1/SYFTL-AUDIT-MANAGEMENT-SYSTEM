@@ -14,15 +14,9 @@
                 <h2 class="brand-name">Sentinel AMS</h2>
             </div>
             <nav class="side-nav">
-                <a href="index.html" class="nav-link">
-                    <span class="icon">📊</span> Dashboard
-                </a>
-                <a href="audit-plan.html" class="nav-link active">
-                    <span class="icon">📅</span> Audit Schedules
-                </a>
-                <a href="conduct-audit.html" class="nav-link">
-                    <span class="icon">📝</span> Conduct Audit
-                </a>
+                <a href="index.html" class="nav-link">📊 Dashboard</a>
+                <a href="audit-plan.html" class="nav-link active">📅 Audit Schedules</a>
+                <a href="conduct-audit.html" class="nav-link">📝 Conduct Audit</a>
             </nav>
         </aside>
 
@@ -34,28 +28,23 @@
                         <option value="2026">2026</option>
                         <option value="2027">2027</option>
                     </select>
-                    <button class="btn-login" id="loginBtn" onclick="PlanGenerator.showLogin()">
-                        🔒 Audit Team Login
-                    </button>
+                    <button class="btn-login" id="loginBtn" onclick="PlanGenerator.showLogin()">🔒 Audit Team Login</button>
                 </div>
             </header>
 
-            <div class="calendar-grid" id="planContainer">
-                </div>
+            <div class="calendar-grid" id="planContainer"></div>
 
-            <div id="syncContainer" class="sync-footer" style="display:none;">
-                <button class="btn-sync" onclick="PlanGenerator.pushToMaster()">
-                    🚀 Push Changes to Master Memory
-                </button>
+            <div id="syncContainer" class="sync-footer" style="display:none; text-align:center; margin-top:30px;">
+                <button class="btn-save" style="max-width:300px;" onclick="PlanGenerator.pushToMaster()">🚀 Push Changes to Master Memory</button>
             </div>
         </main>
     </div>
 
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content small-modal">
-            <h2>Admin Authentication</h2>
+            <h2>Admin Login</h2>
             <div class="form-group">
-                <label>Audit Team Password</label>
+                <label>Password</label>
                 <input type="password" id="adminPass" placeholder="Enter Password">
             </div>
             <div class="modal-footer">
@@ -67,7 +56,7 @@
 
     <div id="auditModal" class="modal-overlay">
         <div class="modal-content">
-            <h2 id="modalHeader">Audit Details</h2>
+            <h2>Audit Details</h2>
             <div class="form-group">
                 <label>Audit Title</label>
                 <input type="text" id="modalTitle">
@@ -76,9 +65,15 @@
                 <label>Auditee Name</label>
                 <input type="text" id="modalAuditee">
             </div>
-            <div class="form-group">
-                <label>Month</label>
-                <input type="text" id="modalMonth">
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Month</label>
+                    <select id="modalMonth"></select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Reporting Period</label>
+                    <input type="text" id="modalPeriod" placeholder="e.g. P10">
+                </div>
             </div>
             <div class="form-group">
                 <label>Department</label>
