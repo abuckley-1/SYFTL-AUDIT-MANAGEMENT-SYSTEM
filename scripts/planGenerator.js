@@ -91,8 +91,10 @@ const PlanGenerator = {
         }
     },
 
-    render(year) {
+ render(year) {
         const container = document.getElementById('planContainer');
+        if (!container) return;
+        
         let html = this.isAdmin ? `<div class="month-card add-new-card" onclick="PlanGenerator.openModal()">+<br><span style="font-size:1rem">Add Audit</span></div>` : '';
 
         this.currentYearData.forEach((audit, index) => {
