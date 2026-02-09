@@ -40,3 +40,21 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); co
 .btn-edit-sm { background: var(--st-navy); }
 .btn-delete-sm { background: #94A3B8; }
 .btn-secondary { background: white; border: 1px solid #CBD5E1; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+
+/* Status Badges */
+.status-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-open { background: #e0f2fe; color: #0369a1; } /* Blue */
+.badge-closed { background: #dcfce7; color: #15803d; } /* Green */
+.badge-overdue { background: #fee2e2; color: #b91c1c; } /* Red */
+.badge-on-hold { background: #fef3c7; color: #b45309; } /* Orange */
+.badge-cancelled { background: #f1f5f9; color: #475569; } /* Gray */
