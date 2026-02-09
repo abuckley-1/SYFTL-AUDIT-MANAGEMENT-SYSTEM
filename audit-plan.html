@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>2026 Audit Plan | Sentinel AMS</title>
+    <title>Audit Schedules | Sentinel AMS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,44 +11,32 @@
             <div class="sidebar-brand"><img src="STLogo.jpg" alt="Logo" class="logo"><h2>Sentinel</h2></div>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link">📊 Dashboard</a>
-                <a href="audit-plan.html" class="nav-link active">📅 2026 Audit Plan</a>
+                <a href="audit-plan.html" class="nav-link active">📅 Audit Schedules</a>
                 <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
             </nav>
         </aside>
+
         <main class="main-content">
             <header class="top-header">
-                <h1>2026 Master Audit Schedule</h1>
-                <p>Status: Active | CC: N. Dobbs</p>
+                <div>
+                    <h1>Audit Schedules</h1>
+                    <p>Select year and manage internal compliance cycles.</p>
+                </div>
+                <div class="header-controls">
+                    <select id="yearSelector" onchange="PlanGenerator.loadYear()">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                    <button class="btn-secondary" onclick="PlanGenerator.authenticateAdmin()">🔐 Edit Schedule</button>
+                </div>
             </header>
+
             <div class="calendar-grid" id="planContainer">
                 </div>
         </main>
     </div>
-    <script>
-        const schedule = [
-            { month: "Jan", scope: "COSHH Shadow Audit", type: "SHADOW", ref: "ST0096-S" },
-            { month: "Feb", scope: "Fire Safety - Depot", type: "INTERNAL", ref: "ST0097" },
-            { month: "Mar", scope: "ISO 9001 Systems", type: "SYSTEM", ref: "ST0098" },
-            { month: "Apr", scope: "Contractors", type: "OPS", ref: "ST0099" },
-            { month: "May", scope: "ISO 14001 Env", type: "SYSTEM", ref: "ST0100" },
-            { month: "Jun", scope: "Competence", type: "HR", ref: "ST0101" },
-            { month: "Jul", scope: "ISO 45001 H&S", type: "SYSTEM", ref: "ST0102" },
-            { month: "Aug", scope: "Risk Review", type: "RISK", ref: "ST0103" },
-            { month: "Sep", scope: "Security", type: "SEC", ref: "ST0104" },
-            { month: "Oct", scope: "Incidents", type: "SAFETY", ref: "ST0105" },
-            { month: "Nov", scope: "Stores/PPE", type: "INTERNAL", ref: "ST0106" },
-            { month: "Dec", scope: "Mgmt Review", type: "EXEC", ref: "ST0107" }
-        ];
-
-        const html = schedule.map(a => `
-            <div class="month-card ${a.type === 'SHADOW' ? 'shadow-critical' : ''}">
-                <div class="month-label">${a.month}</div>
-                <strong>${a.scope}</strong>
-                <p>${a.ref}</p>
-                <span class="type-tag">${a.type}</span>
-            </div>
-        `).join('');
-        document.getElementById('planContainer').innerHTML = html;
-    </script>
+    <script src="scripts/planGenerator.js"></script>
 </body>
 </html>
