@@ -2,72 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Supertram Sentinel | AMS Dashboard</title>
+    <title>Dashboard | Sentinel AMS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-brand">
-                <img src="STLogo.jpg" alt="Supertram Logo" class="logo">
-                <h2>Sentinel AMS</h2>
-            </div>
+            <div class="sidebar-brand"><h2>Sentinel</h2></div>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link active">📊 Dashboard</a>
-                <a href="audit-plan.html" class="nav-link">📅 2026 Audit Plan</a>
+                <a href="audit-plan.html" class="nav-link">📅 Audit Schedules</a>
                 <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
-                <div class="nav-divider"></div>
-                <a href="#" class="nav-link">🏠 SHEQ Main Portal</a>
             </nav>
         </aside>
-
         <main class="main-content">
             <header class="top-header">
                 <h1>Compliance Dashboard</h1>
-                <button class="btn-primary" onclick="window.location.href='audit-form.html'">+ New Audit Entry</button>
+                <span class="pill pill-success">Master Memory: Active</span>
             </header>
-
-            <section class="kpi-grid">
-                <div class="kpi-card orange-top">
-                    <h4>Safety Index</h4>
-                    <div class="value">STD</div>
-                    <p>Target: Predictable (RM3)</p>
-                </div>
-                <div class="kpi-card navy-top">
-                    <h4>Plan Progress</h4>
-                    <div class="value">01/12</div>
-                    <p>Next: Fire Safety (Feb)</p>
-                </div>
-                <div class="kpi-card red-top">
-                    <h4>Open Major NCs</h4>
-                    <div class="value">01</div>
-                    <p>Ref: ST0096 COSHH</p>
-                </div>
-            </section>
-
-            <section class="data-section">
-                <h3>Live Tracker</h3>
-                <table class="st-table">
-                    <thead>
-                        <tr>
-                            <th>Ref</th>
-                            <th>Scope</th>
-                            <th>Auditee</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="urgent-row">
-                            <td>ST0096</td>
-                            <td>COSHH Control</td>
-                            <td>G. Seaborn</td>
-                            <td><span class="pill pill-danger">Major NC</span></td>
-                            <td><button class="btn-sm" onclick="window.location.href='audit-plan.html'">View Shadow Audit</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+            <div class="kpi-grid">
+                <div class="kpi-card orange-top"><h4>Safety Index</h4><div class="value">STD</div></div>
+                <div class="kpi-card navy-top"><h4>Schedules Live</h4><div class="value" id="scheduleCount">12</div></div>
+                <div class="kpi-card red-top"><h4>Major NCs</h4><div class="value">01</div></div>
+            </div>
         </main>
     </div>
 </body>
