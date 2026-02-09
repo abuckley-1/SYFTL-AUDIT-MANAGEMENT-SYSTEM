@@ -20,10 +20,16 @@ const PlanGenerator = {
         this.render(year);
     },
 
-    // LOGIN MODAL LOGIC
-    showLogin() { document.getElementById('loginModal').style.display = 'flex'; },
-    closeLogin() { document.getElementById('loginModal').style.display = 'none'; },
-    
+    // --- LOGIN LOGIC ---
+    showLogin() {
+        document.getElementById('loginModal').style.display = 'flex';
+    },
+
+    closeLogin() {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('adminPass').value = '';
+    },
+
     authenticateAdmin() {
         const pass = document.getElementById('adminPass').value;
         if (pass === "SupertramSHEQ2026") {
@@ -31,17 +37,19 @@ const PlanGenerator = {
             document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('syncContainer').style.display = 'block';
             this.closeLogin();
-            this.loadYear();
+            this.render(document.getElementById('yearSelector').value);
         } else {
-            alert("Wrong Password");
+            alert("Unauthorized Access.");
         }
     },
 
-    // EDIT MODAL LOGIC
+    // --- MODAL LOGIC ---
     openModal(index = null) {
         this.editingIndex = index;
         const modal = document.getElementById('auditModal');
-        const audit = index !== null ? this.currentYearData[index] : { month: 'Jan', title: '', auditee: '', dept: 'SHEQ', type: 'Internal', status: 'PLANNED' };
+        const audit = index !== null ? this.currentYearData[index] : { 
+            month: 'Jan', title: '', auditee: '', dept: 'SHEQ', type: 'Internal', status: 'PLANNED' 
+        };
 
         document.getElementById('modalTitle').value = audit.title === "none" ? "" : audit.title;
         document.getElementById('modalAuditee').value = audit.auditee === "n/a" ? "" : audit.auditee;
@@ -59,7 +67,9 @@ const PlanGenerator = {
         select.innerHTML = list.map(opt => `<option value="${opt}" ${opt === selectedValue ? 'selected' : ''}>${opt}</option>`).join('');
     },
 
-    closeModal() { document.getElementById('auditModal').style.display = 'none'; },
+    closeModal() {
+        document.getElementById('auditModal').style.display = 'none';
+    },
 
     saveModal() {
         const year = document.getElementById('yearSelector').value;
@@ -87,34 +97,44 @@ const PlanGenerator = {
     },
 
     deleteAudit(index) {
-        if (confirm("Delete this tile?")) {
+        if (confirm("Permanently delete this audit tile?")) {
             this.currentYearData.splice(index, 1);
             this.render(document.getElementById('yearSelector').value);
         }
     },
 
+    // --- RENDER LOGIC ---
     render(year) {
         const container = document.getElementById('planContainer');
-        let html = this.isAdmin ? `<div class="month-card add-new-card" onclick="PlanGenerator.openModal()">
-                                    <div class="plus-icon">+</div><p>Add New Audit</p></div>` : '';
+        if (!container) return;
+
+        let html = '';
+        
+        if (this.isAdmin) {
+            html += `<div class="month-card add-new-card" onclick="PlanGenerator.openModal()">
+                        <div style="font-size:3rem;">+</div>
+                        <p>Add Audit to ${year}</p>
+                     </div>`;
+        }
 
         this.currentYearData.forEach((audit, index) => {
             const statusClass = audit.status.toLowerCase().replace(/\s+/g, '-');
             html += `
                 <div class="month-card card-type-${audit.type.toLowerCase()}">
-                    <div class="month-label">${audit.month}</div>
+                    <div class="month-label" style="font-weight:800; font-size:1.4rem; color:var(--st-navy);">${audit.month}</div>
                     <div class="status-badge badge-${statusClass}">${audit.status}</div>
-                    <div class="audit-info">
-                        <span class="type-tag">${audit.type}</span>
-                        <h3 class="wrap-text">${audit.title}</h3>
-                        <p class="ref-text"><strong>Ref:</strong> ${audit.ref}</p>
-                        <p class="auditee-text"><strong>Dept:</strong> ${audit.dept}</p>
-                        <p class="auditee-text"><strong>Auditee:</strong> ${audit.auditee}</p>
+                    <div style="margin-top:10px;">
+                        <span style="font-size:0.7rem; color:var(--st-orange); font-weight:bold; text-transform:uppercase;">${audit.type}</span>
+                        <h3 style="margin:5px 0; word-wrap:break-word;">${audit.title}</h3>
+                        <p style="font-size:0.85rem; color:#666; margin:2px 0;"><strong>Ref:</strong> ${audit.ref}</p>
+                        <p style="font-size:0.85rem; color:#666; margin:2px 0;"><strong>Dept:</strong> ${audit.dept}</p>
+                        <p style="font-size:0.85rem; color:#666; margin:2px 0;"><strong>Auditee:</strong> ${audit.auditee}</p>
                     </div>
-                    ${this.isAdmin ? `<div class="admin-actions">
-                        <button class="btn-edit-sm" onclick="PlanGenerator.openModal(${index})">Edit Details</button>
-                        <button class="btn-delete-sm" onclick="PlanGenerator.deleteAudit(${index})">Delete</button>
-                    </div>` : ''}
+                    ${this.isAdmin ? `
+                        <div class="admin-actions">
+                            <button class="btn-edit-sm" onclick="PlanGenerator.openModal(${index})">Edit Details</button>
+                            <button class="btn-delete-sm" onclick="PlanGenerator.deleteAudit(${index})">Delete</button>
+                        </div>` : ''}
                 </div>`;
         });
         container.innerHTML = html;
@@ -122,12 +142,14 @@ const PlanGenerator = {
 
     initializeBlankYear(year) {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        return months.map(m => ({ month: m, title: "none", ref: `ST0096/NONE/${year}`, auditee: "n/a", dept: "n/a", status: "PLANNED", type: "Internal" }));
+        return months.map(m => ({
+            month: m, title: "none", ref: `ST0096/NONE/${year}`, auditee: "n/a", dept: "n/a", status: "PLANNED", type: "Internal"
+        }));
     },
 
     pushToMaster() {
         console.log(JSON.stringify(this.currentYearData, null, 2));
-        alert("Check Console (F12) for the data to save to GitHub.");
+        alert("Data copied to Browser Console (F12). Paste into your GitHub data file.");
     }
 };
 
