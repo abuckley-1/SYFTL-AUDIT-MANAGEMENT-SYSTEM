@@ -172,3 +172,40 @@ const PlanGenerator = {
 };
 
 document.addEventListener('DOMContentLoaded', () => PlanGenerator.loadYear());
+
+// Automated Notification Trigger
+async triggerAuditNotification(index) {
+    const audit = this.currentYearData[index];
+    const triggerDate = new Date();
+    const expiryDate = new Date();
+    expiryDate.setDate(triggerDate.getDate() + 10); // 1.5 Weeks for Ack
+
+    // Construct the Formal Notification Email
+    const subject = `URGENT: Audit Notification - ${audit.ref}`;
+    const body = `
+INTERNAL AUDIT PLAN AND NOTIFICATION (Form: ST0096-02/1RevC)
+------------------------------------------------------------
+Audit Reference: ${audit.ref}
+Auditor: System Automated / ${audit.auditor || 'TBC'}
+Period: ${audit.month}${new Date().getFullYear().toString().slice(-2)}
+Dept/SMS Section: ${audit.dept}
+
+OBJECTIVE: The purpose of this audit is to assess the compliance of current business practices... 
+meeting relevant criterion against legal, universal standards (ISO9001, 14001, 45001, RM3).
+
+SCOPE: ${audit.title}
+CRITERIA: ISO9001, ISO14001, ISO45001 and RM3.
+
+ACTION REQUIRED: Please acknowledge receipt within 1.5 weeks. 
+If unable to participate, nominate a deputy. 
+Failure to respond by ${expiryDate.toLocaleDateString()} confirms your participation.
+    `;
+
+    // Open the user's email client with the automated brief
+    window.location.href = `mailto:${audit.auditeeEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Update Master Memory that Notification was sent
+    audit.notificationSent = triggerDate.toISOString();
+    audit.status = "NOTIFIED";
+    await this.pushToMaster();
+}
