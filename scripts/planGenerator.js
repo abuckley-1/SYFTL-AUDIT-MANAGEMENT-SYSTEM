@@ -36,12 +36,15 @@ const PlanGenerator = {
 
     openModal(index = null) {
         this.editingIndex = index;
-        const audit = index !== null ? this.currentYearData[index] : { month: 'Jan', title: '', auditee: '', dept: 'SHEQ', type: 'Internal', status: 'PLANNED', period: '' };
+        const audit = index !== null ? this.currentYearData[index] : { 
+            month: 'Jan', title: '', auditee: '', dept: 'SHEQ', type: 'Internal', status: 'PLANNED', period: '' 
+        };
 
         document.getElementById('modalTitle').value = audit.title === "none" ? "" : audit.title;
         document.getElementById('modalAuditee').value = audit.auditee === "n/a" ? "" : audit.auditee;
         document.getElementById('modalPeriod').value = audit.period || "";
         
+        // This is the fix: Population of the Month dropdown
         this.fillDropdown('modalMonth', this.lists.months, audit.month);
         this.fillDropdown('modalDept', this.lists.depts, audit.dept);
         this.fillDropdown('modalType', this.lists.types, audit.type);
@@ -52,6 +55,7 @@ const PlanGenerator = {
 
     fillDropdown(id, list, selectedValue) {
         const select = document.getElementById(id);
+        if (!select) return;
         select.innerHTML = list.map(opt => `<option value="${opt}" ${opt === selectedValue ? 'selected' : ''}>${opt}</option>`).join('');
     },
 
@@ -95,7 +99,7 @@ const PlanGenerator = {
             const statusClass = audit.status.toLowerCase().replace(/\s+/g, '-');
             html += `
                 <div class="month-card card-type-${audit.type.toLowerCase()}">
-                    <div class="month-label">${audit.month} <span style="font-size:0.8rem; color:#999;">(${audit.period || 'N/A'})</span></div>
+                    <div class="month-label">${audit.month} <span style="font-size:0.8rem; color:#999; font-weight:normal;">(${audit.period || 'N/A'})</span></div>
                     <div class="status-badge badge-${statusClass}">${audit.status}</div>
                     <div class="audit-info">
                         <span class="type-tag">${audit.type}</span>
@@ -119,7 +123,7 @@ const PlanGenerator = {
 
     pushToMaster() {
         console.log(JSON.stringify(this.currentYearData, null, 2));
-        alert("Check F12 Console for data.");
+        alert("Check F12 Console for data to save to your JSON file.");
     }
 };
 
