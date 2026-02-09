@@ -52,3 +52,15 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--st-ligh
 .btn-edit-sm { background: var(--st-navy); color: white; border: none; padding: 8px; border-radius: 4px; flex: 1; cursor: pointer; }
 .btn-delete-sm { background: #94A3B8; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; }
 .add-new-card { border: 2px dashed #CBD5E1; background: transparent; cursor: pointer; align-items: center; justify-content: center; text-align: center; font-weight: bold; min-height: 280px; }
+
+/* DASHBOARD SPECIFIC */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+.kpi-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+.kpi-label { display: block; color: #666; font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; }
+.kpi-value { font-size: 2.5rem; font-weight: 800; color: var(--st-navy); }
+
+.dept-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; background: white; padding: 10px; border-radius: 8px; }
+.dept-name { width: 180px; font-weight: bold; font-size: 0.9rem; }
+.progress-bar-bg { flex: 1; height: 12px; background: #eee; border-radius: 10px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--st-orange); transition: width 0.5s ease; }
+.dept-pct { width: 40px; font-size: 0.85rem; font-weight: bold; text-align: right; }
