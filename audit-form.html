@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Audit Entry | Sentinel AMS</title>
+    <title>Audit Questionnaire | Sentinel AMS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,17 +16,18 @@
         </aside>
 
         <main class="main-content">
-            <div class="card" style="background:white; padding:30px; border-radius:10px;">
-                <h2 id="formTitle">Loading Questionnaire...</h2>
-                <p id="phaseIndicator" style="font-weight:bold; color:var(--st-orange);"></p>
-                <hr>
-                <form id="activeForm">
-                    <div id="questionArea">
+            <div class="card" style="background:white; padding:40px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+                <h1 id="phaseTitle">Questionnaire</h1>
+                <p id="phaseDesc" style="color:var(--st-orange); font-weight:bold;"></p>
+                <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+                
+                <form id="auditEntryForm">
+                    <div id="dynamicQuestions">
                         </div>
-                    
-                    <div style="margin-top:30px;">
-                        <button type="button" class="btn-primary" onclick="saveProgress()">💾 Save Progress</button>
-                        <button type="button" class="btn-secondary" onclick="submitFinal()">✅ Final Submission</button>
+
+                    <div style="margin-top:40px; display:flex; gap:15px;">
+                        <button type="button" class="btn-primary" onclick="alert('Data Saved Successfully')">💾 Save Progress</button>
+                        <button type="button" class="btn-secondary" onclick="window.location.href='audit-plan.html'">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -34,46 +35,30 @@
     </div>
 
     <script>
-        // Check day of month to decide Phase
-        const day = new Date().getDate();
-        const phase = day <= 14 ? "INITIAL" : "EVIDENCE";
-        
-        document.getElementById('formTitle').innerText = "Audit Questionnaire (ST0096)";
-        document.getElementById('phaseIndicator').innerText = phase === "INITIAL" ? 
-            "PHASE 1: Initial Assessment (Weeks 1-2)" : 
-            "PHASE 2: Further Evidence Gathering (Weeks 3-4)";
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+        const qContainer = document.getElementById('dynamicQuestions');
 
-        const questionArea = document.getElementById('questionArea');
-
-        if(phase === "INITIAL") {
-            questionArea.innerHTML = `
-                <label>Q1: Are COSHH assessments available for all substances in your area?</label>
-                <select id="q1"><option>Select...</option><option>Yes</option><option>No</option></select>
-                <br><br>
-                <label>Initial Comments:</label>
-                <textarea id="comments" style="width:100%; height:100px;"></textarea>
+        if (mode === 'initial') {
+            document.getElementById('phaseTitle').innerText = "Initial Assessment Questionnaire";
+            document.getElementById('phaseDesc').innerText = "Phase 1: Initial Questionnaire (Weeks 1-2)";
+            qContainer.innerHTML = `
+                <label style="display:block; margin-bottom:10px;"><strong>Q1: Are all hazardous substances recorded on the local inventory?</strong></label>
+                <select style="width:100%; padding:10px; margin-bottom:20px;"><option>Yes</option><option>No</option><option>Partial</option></select>
+                
+                <label style="display:block; margin-bottom:10px;"><strong>Auditee Initial Comments:</strong></label>
+                <textarea style="width:100%; height:120px; padding:10px; border:1px solid #ddd; border-radius:6px;"></textarea>
             `;
         } else {
-            questionArea.innerHTML = `
-                <label>Evidence Upload: Please provide SYPOL screenshots or training logs.</label>
-                <input type="file" multiple>
-                <br><br>
-                <label>Detailed Evidence Notes:</label>
-                <textarea id="evidenceNotes" style="width:100%; height:100px;"></textarea>
+            document.getElementById('phaseTitle').innerText = "Evidence Gathering Phase";
+            document.getElementById('phaseDesc').innerText = "Phase 2: Further Evidence Gathering (Weeks 3-4)";
+            qContainer.innerHTML = `
+                <label style="display:block; margin-bottom:10px;"><strong>Evidence Upload:</strong> Please attach SYPOL reports or safety data sheets.</label>
+                <input type="file" multiple style="margin-bottom:20px;">
+                
+                <label style="display:block; margin-bottom:10px;"><strong>Evidence Justification Notes:</strong></label>
+                <textarea style="width:100%; height:120px; padding:10px; border:1px solid #ddd; border-radius:6px;"></textarea>
             `;
-        }
-
-        function saveProgress() {
-            alert("Progress saved locally. You can return to complete this before the phase deadline.");
-            // Logic to save to localStorage
-            const data = { q1: document.getElementById('q1')?.value, notes: document.getElementById('comments')?.value };
-            localStorage.setItem('audit_draft', JSON.stringify(data));
-        }
-
-        function submitFinal() {
-            if(confirm("Confirm final submission? No further edits can be made.")) {
-                window.location.href = "index.html";
-            }
         }
     </script>
 </body>
