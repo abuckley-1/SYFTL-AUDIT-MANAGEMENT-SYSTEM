@@ -1,4 +1,4 @@
-/* Sentinel AMS - Master Stylesheet */
+/* Sentinel AMS - Master Stylesheet - Final Wrap Fix */
 :root { 
     --st-navy: #1D3C6E; 
     --st-orange: #F26522; 
@@ -77,8 +77,6 @@ body {
     margin-bottom: 30px; 
 }
 
-.header-controls { display: flex; gap: 10px; align-items: center; }
-
 /* --- AUDIT GRID & CARDS --- */
 .calendar-grid { 
     display: grid; 
@@ -95,6 +93,7 @@ body {
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Prevents anything from sticking out */
 }
 
 .month-label { 
@@ -115,47 +114,52 @@ body {
     text-transform: uppercase; 
 }
 
+/* Specific Wrap Fix for References */
+.ref-text {
+    font-size: 0.85rem; 
+    color: #666; 
+    margin: 2px 0;
+    overflow-wrap: anywhere; /* Forces break on long strings */
+    word-break: break-all;
+    line-height: 1.2;
+}
+
+.wrap-text { 
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    margin: 10px 0; 
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.auditee-text {
+    font-size: 0.85rem; 
+    color: #444; 
+    margin: 2px 0;
+}
+
 .badge-open { background: #E0F2FE; color: #0369A1; }
 .badge-closed { background: #DCFCE7; color: #15803D; }
 .badge-planned { background: #EDE9FE; color: #6D28D9; }
 .badge-overdue { background: #FEE2E2; color: #B91C1C; }
 
 .type-tag { color: var(--st-orange); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-.wrap-text { word-wrap: break-word; margin: 10px 0; }
 
 /* --- MODAL SYSTEM --- */
 .modal-overlay { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.7); 
-    z-index: 9999; 
-    justify-content: center; 
-    align-items: center; 
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; 
 }
 
 .modal-content { 
-    background: white; 
-    padding: 30px; 
-    border-radius: 15px; 
-    width: 100%;
-    max-width: 450px; 
+    background: white; padding: 30px; border-radius: 15px; width: 100%; max-width: 450px; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
 }
-
-.small-modal { max-width: 350px; }
 
 .form-group { margin-bottom: 15px; }
 .form-group label { display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #444; }
 .form-group input, .form-group select { 
-    width: 100%; 
-    padding: 12px; 
-    border: 1px solid #ccc; 
-    border-radius: 8px; 
-    font-size: 0.95rem; 
+    width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 0.95rem; 
 }
 
 .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
@@ -170,13 +174,7 @@ body {
 .btn-delete-sm { background: #94A3B8; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; }
 
 .add-new-card {
-    border: 2px dashed #CBD5E1;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    color: #64748B;
-    font-weight: bold;
+    border: 2px dashed #CBD5E1; background: transparent; display: flex;
+    align-items: center; justify-content: center; text-align: center;
+    cursor: pointer; color: #64748B; font-weight: bold; min-height: 280px;
 }
