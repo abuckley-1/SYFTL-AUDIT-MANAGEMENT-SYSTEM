@@ -1,0 +1,34 @@
+:root {
+    --st-navy: #1D3C6E;
+    --st-orange: #F26522;
+    --st-light-bg: #f4f7f9;
+    /* RM3 / Compliance Palette */
+    --clr-adhoc: #d32f2f;      /* Red - Major NC */
+    --clr-managed: #ef6c00;    /* Amber - Minor NC */
+    --clr-std: #fbc02d;        /* Yellow - OFI */
+    --clr-pred: #388e3c;       /* Light Green - Conforming */
+    --clr-excel: #1b5e20;      /* Dark Green - Excellence */
+}
+
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--st-light-bg); margin: 0; color: #333; }
+.header { background: var(--st-navy); color: white; padding: 1.5rem 2rem; display: flex; align-items: center; border-bottom: 5px solid var(--st-orange); }
+.logo { height: 60px; margin-right: 20px; }
+
+/* Dashboard Tables */
+.audit-table { width: 95%; margin: 2rem auto; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.audit-table th { background: var(--st-navy); color: white; padding: 15px; text-align: left; text-transform: uppercase; font-size: 0.85rem; }
+.audit-table td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+
+/* Status Pills */
+.status { padding: 5px 12px; border-radius: 15px; font-weight: bold; font-size: 0.8rem; text-align: center; }
+.status.adhoc { background: var(--clr-adhoc); color: white; }
+.status.managed { background: var(--clr-managed); color: white; }
+.status.std { background: var(--clr-std); color: #333; }
+.status.pred { background: var(--clr-pred); color: white; }
+.status.excel { background: var(--clr-excel); color: white; }
+
+/* KPI Cards */
+.kpi-container { display: flex; justify-content: space-around; padding: 20px; }
+.kpi-card { background: white; padding: 20px; border-radius: 10px; border-top: 4px solid var(--st-orange); width: 22%; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.kpi-card h4 { margin: 0; color: var(--st-navy); font-size: 0.9rem; }
+.kpi-value { font-size: 2rem; font-weight: bold; margin-top: 10px; color: #333; }
