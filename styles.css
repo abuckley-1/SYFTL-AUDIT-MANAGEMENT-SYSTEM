@@ -1,65 +1,68 @@
-/* Supertram Sentinel AMS - Master Styles V16 */
+/* Sentinel AMS - Professional Layout & Modal Fix */
 :root {
     --st-navy: #1D3C6E;
     --st-orange: #F26522;
-    --st-red: #E30613;
     --bg: #F4F7F9;
 }
 
-body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); }
-.app-container { display: flex; min-height: 100vh; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); overflow-x: hidden; }
 
-/* Sidebar & Layout */
-.sidebar { width: 260px; background: var(--st-navy); color: white; position: fixed; height: 100%; padding-top: 20px; }
-.main-content { margin-left: 260px; flex: 1; padding: 40px; }
+.app-container { display: flex; width: 100%; }
 
-/* Grid */
-.calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-.month-card { background: white; padding: 20px; border-radius: 12px; border-left: 6px solid #ccc; position: relative; min-height: 280px; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+/* SIDEBAR FIX */
+.sidebar { 
+    width: 260px; 
+    background: var(--st-navy); 
+    color: white; 
+    position: fixed; 
+    height: 100vh; 
+    z-index: 100;
+}
+.sidebar-brand { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.logo { width: 100%; max-width: 150px; height: auto; margin-bottom: 10px; }
 
-/* Status Badges */
-.status-badge { position: absolute; top: 15px; right: 15px; font-size: 0.65rem; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+.nav-link { 
+    color: #A0B3CE; text-decoration: none; padding: 15px 25px; display: block; border-left: 4px solid transparent; 
+}
+.nav-link.active { background: rgba(255,255,255,0.1); color: var(--st-orange); border-left-color: var(--st-orange); }
+
+/* MAIN CONTENT FIX */
+.main-content { margin-left: 260px; flex: 1; padding: 40px; min-height: 100vh; }
+.top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+
+/* GRID */
+.calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+.month-card { 
+    background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #ccc; 
+    position: relative; min-height: 280px; display: flex; flex-direction: column; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+}
+
+/* STATUS BADGES */
+.status-badge { position: absolute; top: 15px; right: 15px; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; font-weight: bold; text-transform: uppercase; }
 .badge-open { background: #E0F2FE; color: #0369A1; }
 .badge-closed { background: #DCFCE7; color: #15803D; }
 .badge-planned { background: #EDE9FE; color: #6D28D9; }
 .badge-overdue { background: #FEE2E2; color: #B91C1C; }
 
-/* Custom Modal UI */
+/* MODAL UI */
 .modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center;
 }
-
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    width: 450px;
-    box-shadow: 0 20px 25px rgba(0,0,0,0.2);
-}
-
-.modal-content h2 { color: var(--st-navy); margin-top: 0; }
+.modal-content { background: white; padding: 30px; border-radius: 15px; width: 450px; box-shadow: 0 20px 25px rgba(0,0,0,0.3); }
+.small-modal { width: 350px; }
 .form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--st-gray); margin-bottom: 5px; }
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
+.form-group label { display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #666; }
+.form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
 
 .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
-.btn-save { background: var(--st-navy); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
-.btn-cancel { background: #eee; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; }
+.btn-save { background: var(--st-navy); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
+.btn-cancel { background: #eee; border: none; padding: 12px; border-radius: 6px; cursor: pointer; flex: 1; }
 
-/* Admin Actions */
-.admin-actions { display: flex; gap: 5px; margin-top: auto; }
+.btn-primary { background: var(--st-navy); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+.admin-actions { display: flex; gap: 5px; margin-top: auto; padding-top: 15px; }
 .btn-edit-sm { background: var(--st-navy); color: white; border: none; padding: 8px; border-radius: 4px; flex: 1; cursor: pointer; }
 .btn-delete-sm { background: #94A3B8; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; }
 .wrap-text { word-wrap: break-word; }
