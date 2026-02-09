@@ -64,3 +64,49 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--st-ligh
 .progress-bar-bg { flex: 1; height: 12px; background: #eee; border-radius: 10px; overflow: hidden; }
 .progress-bar-fill { height: 100%; background: var(--st-orange); transition: width 0.5s ease; }
 .dept-pct { width: 40px; font-size: 0.85rem; font-weight: bold; text-align: right; }
+
+:root {
+    --st-navy: #1D3C6E;
+    --st-orange: #F26522;
+    --bg-gradient: linear-gradient(135deg, #f8f9fc 0%, #e2e8f0 100%);
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body { background: var(--bg-gradient); color: #2d3748; }
+
+/* KPI TILES */
+.tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 30px; }
+
+.stat-tile { 
+    background: white; padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px;
+    box-shadow: var(--shadow); transition: transform 0.2s ease; cursor: default;
+}
+.stat-tile:hover { transform: translateY(-5px); }
+
+.tile-icon { font-size: 2rem; background: #f1f5f9; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+.tile-value { display: block; font-size: 1.8rem; font-weight: 800; color: var(--st-navy); }
+.tile-label { font-size: 0.85rem; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* COLOR ACCENTS */
+.primary { border-top: 5px solid var(--st-navy); }
+.success { border-top: 5px solid #10b981; }
+.warning { border-top: 5px solid #f59e0b; }
+.danger { border-top: 5px solid #ef4444; }
+
+/* ANALYTICS SECTION */
+.analytics-row { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+.chart-container { background: white; padding: 25px; border-radius: 16px; box-shadow: var(--shadow); }
+
+.leaderboard-list { margin-top: 20px; }
+.leader-row { display: flex; align-items: center; gap: 15px; margin-bottom: 18px; }
+.leader-name { width: 100px; font-size: 0.85rem; font-weight: 700; color: #4a5568; }
+.leader-bar { flex: 1; height: 8px; background: #edf2f7; border-radius: 4px; overflow: hidden; }
+.leader-bar .fill { height: 100%; background: var(--st-orange); border-radius: 4px; }
+.leader-pct { width: 35px; font-size: 0.8rem; font-weight: 800; color: var(--st-navy); }
+
+/* SYNC PULSE */
+.pulse-dot {
+    height: 10px; width: 10px; background-color: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px;
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0.4); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
