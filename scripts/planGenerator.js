@@ -1,61 +1,80 @@
 /**
- * Supertram Sentinel - Plan Generator
- * Purpose: Dynamically renders the 12-month Audit Schedule
- * Reference: ST0096 Systems Management
+ * Supertram Sentinel - Plan Generator V2
+ * Includes: Year Switching, Admin Authentication, and Phase-based Routing
  */
 
 const PlanGenerator = {
-    // 1. MASTER SCHEDULE DATA
-    // Aligned with Supertram departmental structures and ISO cycles
-    auditSchedule: [
-        { month: "Jan", scope: "COSHH Shadow Audit", auditee: "N. Dobbs (HofENG)", type: "SHADOW", ref: "ST0096-S", risk: "High" },
-        { month: "Feb", scope: "Fire Safety - Depot", auditee: "N. Dobbs (HofENG)", type: "INTERNAL", ref: "ST0097", risk: "Med" },
-        { month: "Mar", scope: "ISO 9001 Quality", auditee: "S. English (MD)", type: "SYSTEM", ref: "ST0098", risk: "Low" },
-        { month: "Apr", scope: "Contractor Safety", auditee: "Eng. Team", type: "OPERATIONAL", ref: "ST0099", risk: "Med" },
-        { month: "May", scope: "ISO 14001 Env.", auditee: "SHEQ Dept", type: "SYSTEM", ref: "ST0100", risk: "Low" },
-        { month: "Jun", scope: "Training Logs", auditee: "HR / Managers", type: "HR/S", ref: "ST0101", risk: "Med" },
-        { month: "Jul", scope: "ISO 45001 H&S", auditee: "All Depts", type: "SYSTEM", ref: "ST0102", risk: "Low" },
-        { month: "Aug", scope: "Risk Assessments", auditee: "Process Owners", type: "RISK", ref: "ST0103", risk: "High" },
-        { month: "Sep", scope: "Depot Security", auditee: "Facilities", type: "SEC", ref: "ST0104", risk: "Low" },
-        { month: "Oct", scope: "Incidents/Near Miss", auditee: "Safety Mgr", type: "SAFETY", ref: "ST0105", risk: "Med" },
-        { month: "Nov", scope: "PPE & Stores", auditee: "Stores Lead", type: "INTERNAL", ref: "ST0106", risk: "Med" },
-        { month: "Dec", scope: "Management Review", auditee: "Executive", type: "STRATEGIC", ref: "ST0107", risk: "Low" }
-    ],
+    isAdmin: false,
 
-    // 2. RENDERING ENGINE
-    init: function() {
+    // Example Schedule Data (In a live app, this would be a JSON file or Database)
+    data: {
+        "2026": [
+            { month: "Jan", title: "COSHH Shadow Audit", ref: "ST0096-S", auditee: "N. Dobbs" },
+            { month: "Feb", title: "Fire Safety - Depot", ref: "ST0097", auditee: "N. Dobbs" },
+            { month: "Mar", title: "ISO 9001 Systems", ref: "ST0098", auditee: "S. English" },
+            // ... (rest of the 12 months)
+        ]
+    },
+
+    loadYear: function() {
+        const year = document.getElementById('yearSelector').value;
+        this.render(year);
+    },
+
+    authenticateAdmin: function() {
+        const pass = prompt("Enter Audit Team Password to Edit:");
+        if (pass === "SupertramSHEQ2026") { // Example Password
+            this.isAdmin = true;
+            alert("Admin Mode Active: You can now edit tile details.");
+            this.loadYear();
+        } else {
+            alert("Incorrect Password.");
+        }
+    },
+
+    render: function(year) {
         const container = document.getElementById('planContainer');
-        if (!container) return;
+        const currentMonthIndex = new Date().getMonth();
+        const currentDay = new Date().getDate();
+        const selectedYear = new Date().getFullYear().toString();
 
         let html = '';
-        const currentMonthIndex = new Date().getMonth(); // 0-11
+        const yearData = this.data[year] || this.data["2026"]; // Fallback to 2026
 
-        this.auditSchedule.forEach((audit, index) => {
-            // Logic to determine if this audit is the current focus
-            const isCurrent = index === currentMonthIndex ? 'current-focus' : '';
-            const isShadow = audit.type === 'SHADOW' ? 'shadow-critical' : '';
+        yearData.forEach((audit, index) => {
+            const isCurrentMonth = (index === currentMonthIndex && year === selectedYear);
+            const highlightClass = isCurrentMonth ? 'current-focus' : '';
+            
+            // Determine Phase Logic
+            let phaseAction = "";
+            if (isCurrentMonth) {
+                phaseAction = currentDay <= 14 ? "initial-phase" : "evidence-phase";
+            }
 
             html += `
-                <div class="month-card ${isCurrent} ${isShadow}">
-                    <div class="month-label">${audit.month.toUpperCase()}</div>
+                <div class="month-card ${highlightClass}" onclick="PlanGenerator.handleTileClick('${phaseAction}')">
+                    <div class="month-label">${audit.month}</div>
                     <div class="audit-info">
-                        <h3>${audit.scope}</h3>
-                        <p class="ref-no">Ref: ${audit.ref}</p>
-                        <p class="auditee"><strong>Auditee:</strong> ${audit.auditee}</p>
+                        <h3>${audit.title}</h3>
+                        <p><strong>Ref:</strong> ${audit.ref}</p>
+                        <p><strong>Auditee:</strong> ${audit.auditee}</p>
                     </div>
-                    <div class="card-footer">
-                        <span class="type-tag">${audit.type}</span>
-                        <span class="risk-indicator risk-${audit.risk.toLowerCase()}">Risk: ${audit.risk}</span>
-                    </div>
+                    ${this.isAdmin ? '<button class="btn-sm">Edit Details</button>' : ''}
                 </div>
             `;
         });
-
         container.innerHTML = html;
+    },
+
+    handleTileClick: function(phase) {
+        if (phase === "initial-phase") {
+            window.location.href = "audit-form.html?mode=initial";
+        } else if (phase === "evidence-phase") {
+            window.location.href = "audit-form.html?mode=evidence";
+        } else {
+            alert("This audit is not currently in an active window.");
+        }
     }
 };
 
-// Start the generator when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    PlanGenerator.init();
-});
+document.addEventListener('DOMContentLoaded', () => PlanGenerator.loadYear());
