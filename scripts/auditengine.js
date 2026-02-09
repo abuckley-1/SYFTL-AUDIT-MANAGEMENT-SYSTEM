@@ -79,3 +79,77 @@ const AuditEngine = {
 if (typeof module !== 'undefined') {
     module.exports = AuditEngine;
 }
+
+const AuditEngine = {
+    allAudits: [],
+    
+    async init() {
+        try {
+            const res = await fetch('./data/schedules_2026.json');
+            this.allAudits = await res.json();
+            this.populateSelector();
+        } catch (e) { console.error("Sync Error", e); }
+    },
+
+    populateSelector() {
+        const select = document.getElementById('auditSelector');
+        const openAudits = this.allAudits.filter(a => a.status !== 'CLOSED' && a.title !== 'none');
+        
+        select.innerHTML = '<option value="">-- Choose Audit --</option>' + 
+            openAudits.map((a, i) => `<option value="${i}">${a.month}: ${a.title}</option>`).join('');
+    },
+
+    loadAuditDetails() {
+        const idx = document.getElementById('auditSelector').value;
+        if (idx === "") return;
+        
+        const audit = this.allAudits.filter(a => a.status !== 'CLOSED' && a.title !== 'none')[idx];
+        document.getElementById('displayRef').innerText = audit.ref;
+        document.getElementById('displayDept').innerText = audit.dept;
+        document.getElementById('auditForm').style.display = 'block';
+    },
+
+    async submitAudit() {
+        if(!confirm("Submit audit results? This will update the Master Memory.")) return;
+
+        const idx = document.getElementById('auditSelector').value;
+        const selectedAudit = this.allAudits.filter(a => a.status !== 'CLOSED' && a.title !== 'none')[idx];
+        
+        // Find the original index in the main array and update it
+        const masterIdx = this.allAudits.findIndex(a => a.ref === selectedAudit.ref);
+        this.allAudits[masterIdx].status = 'CLOSED';
+        this.allAudits[masterIdx].score = document.getElementById('complianceScore').value + "%";
+
+        // Re-use the push logic from your planGenerator
+        await this.pushUpdate();
+    },
+
+    async pushUpdate() {
+        const token = "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";
+        const repo = "abuckley-1/SYFTL-AUDIT-MANAGEMENT-SYSTEM";
+        const path = "data/schedules_2026.json";
+
+        // Get SHA
+        const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        const fileData = await getRes.json();
+
+        // Push
+        const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: `Audit Completed: ${document.getElementById('displayRef').innerText}`,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(this.allAudits, null, 2)))),
+                sha: fileData.sha
+            })
+        });
+
+        if(putRes.ok) {
+            alert("Audit Saved Successfully!");
+            window.location.href = "index.html";
+        }
+    }
+};
+AuditEngine.init();
