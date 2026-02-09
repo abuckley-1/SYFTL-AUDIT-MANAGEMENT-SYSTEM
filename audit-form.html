@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <img src="STLogo.jpg" class="logo">
+        <div>
+            <h2>Internal Audit Questionnaire</h2>
+            <p>Ref: ST0096 / <span id="auditScope">WASTE</span> / 2026</p>
+        </div>
+    </div>
+
+    <div style="max-width: 800px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 10px;">
+        <div id="deadline-warning" style="color: red; font-weight: bold; margin-bottom: 1rem;"></div>
+        
+        <form id="auditForm">
+            <h3>Initial Details</h3>
+            <label>Auditee Name:</label><input type="text" id="auditee" required style="width:100%; margin-bottom:1rem;">
+            <label>Department:</label><input type="text" id="dept" required style="width:100%; margin-bottom:1rem;">
+            
+            <h3>Mandatory Compliance Questions</h3>
+            <div class="q-block">
+                <p>1. What is the business's documented policies and/or procedures with regards the subject matter? (Quote title/ref) [ISO 9001 - 4.4]</p>
+                <textarea id="q1" required></textarea>
+            </div>
+            <div class="q-block">
+                <p>2. Is all relevant instruction communicated and available to all relevant staff? [ISO 45001 - 7.4]</p>
+                <textarea id="q2" required></textarea>
+            </div>
+            <div class="q-block">
+                <p>3. Is TOP management visibly committed to compliance? [ISO 9001 - 5.1]</p>
+                <textarea id="q3" required></textarea>
+            </div>
+            <div class="q-block">
+                <p>4. Are relevant risk assessments up to date? [RM3 - RCS1]</p>
+                <textarea id="q4" required></textarea>
+            </div>
+
+            <h3>Technical Criteria Questions (System Generated)</h3>
+            <div id="dynamic-questions"></div>
+
+            <button type="submit" class="st-button" style="background:var(--st-navy); color:white; padding:10px 20px; border:none; cursor:pointer; width:100%;">Submit Audit Data</button>
+        </form>
+    </div>
+
+    <script src="scripts/auditEngine.js"></script>
+</body>
+</html>
