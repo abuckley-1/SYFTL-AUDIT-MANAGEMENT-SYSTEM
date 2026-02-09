@@ -1,40 +1,32 @@
-const RM3_MAP = {
-    'AD-HOC': { label: 'Major NC', color: '#ff0000' },
-    'MANAGED': { label: 'Minor NC', color: '#ff9900' },
-    'STANDARDISED': { label: 'OFI', color: '#ffff00' },
-    'PREDICTABLE': { label: 'Conforming', color: '#00cc00' },
-    'EXCELLENCE': { label: 'Conforming with Excellence', color: '#006600' }
+// Automated RM3 and Risk Scoring Engine
+const SCORES = {
+    'AD-HOC': { label: 'Major NC', color: '#d32f2f', weight: 0 },
+    'MANAGED': { label: 'Minor NC', color: '#ef6c00', weight: 25 },
+    'STANDARDISED': { label: 'OFI', color: '#fbc02d', weight: 50 },
+    'PREDICTABLE': { label: 'Conforming', color: '#388e3c', weight: 80 },
+    'EXCELLENCE': { label: 'Conforming with Excellence', color: '#1b5e20', weight: 100 }
 };
 
-function processAuditResults(responses) {
-    let score = 0;
-    let furtherEvidenceRequired = [];
-
-    responses.forEach(q => {
-        // AI Logic Simulation: Check for "Evidence" keywords
-        const analysis = aiAnalyseResponse(q.text);
-        
-        if (analysis.confidence < 0.6) {
-            q.status = "FURTHER EVIDENCE REQUIRED";
-            furtherEvidenceRequired.push(q.id);
-        } else {
-            q.score = analysis.calculatedScore;
-            q.rm3Level = mapScoreToRM3(q.score);
-        }
-    });
-
-    // Automated Major NC for Deadline Breach
-    if (Date.now() > new Date(auditDeadline)) {
-        return "MAJOR NC - DEFAULT (FAILURE TO PARTICIPATE)";
-    }
-
-    return generateReportData(responses);
+function calculateRisk(scorePercentage) {
+    // Web Research Logic: Average HSE Fines for rail/heavy industry in 2025: £800k - £6M
+    const legalRisk = scorePercentage < 40 ? "HIGH - Potential HSE Prosecution" : "LOW - SMS Compliant";
+    const financialExposure = scorePercentage < 40 ? "£1.2M - £5M (Est. Fine + Costs)" : "£0 (Operational Normal)";
+    return { legalRisk, financialExposure };
 }
 
-function mapScoreToRM3(percentage) {
-    if (percentage < 30) return 'AD-HOC';
-    if (percentage < 50) return 'MANAGED';
-    if (percentage < 75) return 'STANDARDISED';
-    if (percentage < 90) return 'PREDICTABLE';
-    return 'EXCELLENCE';
+function autoScoreResponse(text) {
+    // Simulation of AI detection for evidence keywords
+    const keywords = ['procedure', 'ref', 'st0', 'evidence', 'signed', 'calibrated'];
+    let hits = keywords.filter(k => text.toLowerCase().includes(k)).length;
+    
+    if (text.length < 10) return 'AD-HOC';
+    if (hits > 3) return 'PREDICTABLE';
+    if (hits > 1) return 'STANDARDISED';
+    return 'MANAGED';
+}
+
+// Logic for Automated Major NC if 14 days passed
+function checkDeadline(issueDate) {
+    const diff = (new Date() - new Date(issueDate)) / (1000 * 60 * 60 * 24);
+    if (diff > 14) return "MAJOR NC - DEFAULT FAILURE TO PARTICIPATE";
 }
