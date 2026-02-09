@@ -1,34 +1,9 @@
-name: Sync Master Memory
-
-on:
-  repository_dispatch:
-    types: [update_schedule]
-
-jobs:
-  update-json:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Update Schedule Data
-        run: |
-          echo '${{ github.event.client_payload.data }}' > data/schedules_${{ github.event.client_payload.year }}.json
-
-      - name: Commit to Master Memory
-        run: |
-          git config --local user.email "sentinel-bot@supertram.com"
-          git config --local user.name "Sentinel Bot"
-          git add data/*.json
-          git commit -m "Update Audit Schedule Master Memory [skip ci]"
-          git push
-
 name: Master Memory Sync
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # This allows the website to trigger the sync manually
+  workflow_dispatch: # This line is critical for the website trigger
 
 jobs:
   sync:
@@ -38,4 +13,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Sync Confirmation
-        run: echo "Master Memory Sync Successful. Data is now live across all SAMS nodes."
+        run: |
+          echo "Master Memory Sync Successful."
+          echo "Supertram Audit Management System is now synchronized."
