@@ -5,56 +5,38 @@
     --bg: #F4F7F9;
 }
 
-body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; }
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #333; }
 .app-container { display: flex; width: 100%; min-height: 100vh; }
 
 /* Sidebar */
-.sidebar { width: 260px; background: var(--st-navy); color: white; position: fixed; height: 100%; z-index: 100; }
-.sidebar-brand { padding: 30px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.logo { width: 150px; }
-.nav-link { color: #A0B3CE; text-decoration: none; padding: 15px 25px; display: block; transition: 0.3s; }
-.nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: var(--st-orange); border-left: 4px solid var(--st-orange); }
+.sidebar { width: 260px; background: var(--st-navy); color: white; position: fixed; height: 100%; }
+.sidebar-brand { padding: 30px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+.logo { width: 150px; margin-bottom: 10px; }
+.nav-link { color: #A0B3CE; text-decoration: none; padding: 15px 25px; display: block; border-left: 4px solid transparent; }
+.nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: var(--st-orange); border-left-color: var(--st-orange); }
+.nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 20px 25px; }
 
-/* Main Content */
+/* Content Area */
 .main-content { margin-left: 260px; flex: 1; padding: 40px; }
 .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 
-/* Audit Schedule Grid */
-.calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-.month-card { 
-    background: white; 
-    padding: 20px; 
-    border-radius: 10px; 
-    border-left: 6px solid #ccc; 
-    cursor: pointer; 
-    transition: 0.3s;
-    position: relative;
-}
-.month-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+/* Tiles */
+.calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.month-card { background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #CBD5E1; cursor: pointer; transition: 0.3s; position: relative; }
+.month-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
-/* Highlighting the Current Month */
-.current-focus { 
-    border-left-color: var(--st-orange) !important; 
-    background: #fff9f5; 
-    ring: 2px solid var(--st-orange);
-}
-.current-focus::after {
-    content: "CURRENT MONTH";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 0.6rem;
-    background: var(--st-orange);
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
+/* Highlighting Logic */
+.current-focus { border-left-color: var(--st-orange) !important; background: #FFF9F5; box-shadow: 0 0 15px rgba(242, 101, 34, 0.2); }
+.current-focus::after { content: "ACTIVE NOW"; position: absolute; top: 10px; right: 10px; font-size: 0.6rem; background: var(--st-orange); color: white; padding: 3px 8px; border-radius: 20px; font-weight: bold; }
 
-.month-label { font-weight: 900; color: var(--st-navy); font-size: 1.2rem; margin-bottom: 10px; }
-.audit-info h3 { margin: 0; font-size: 1rem; color: #333; }
-.audit-info p { margin: 5px 0; font-size: 0.85rem; color: #666; }
+.month-label { font-weight: 800; font-size: 1.4rem; color: var(--st-navy); margin-bottom: 15px; }
+.audit-info h3 { margin: 0 0 10px 0; font-size: 1.1rem; }
+.audit-info p { margin: 4px 0; font-size: 0.9rem; color: #64748B; }
 
-/* Buttons & Inputs */
-.btn-primary { background: var(--st-navy); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-.btn-secondary { background: #e2e8f0; color: #475569; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-select { padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1; }
+/* Admin UI */
+.add-new-card { border: 2px dashed #CBD5E1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #F8FAFC !important; color: #64748B; }
+.admin-actions { display: flex; gap: 5px; margin-top: 15px; }
+.btn-edit-sm, .btn-delete-sm { flex: 1; padding: 6px; border-radius: 4px; border: none; cursor: pointer; font-size: 0.75rem; color: white; }
+.btn-edit-sm { background: var(--st-navy); }
+.btn-delete-sm { background: #94A3B8; }
+.btn-secondary { background: white; border: 1px solid #CBD5E1; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
