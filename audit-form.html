@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Conduct Audit | Sentinel AMS</title>
+    <title>Audit Entry | Sentinel AMS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,38 +11,70 @@
             <div class="sidebar-brand"><h2>Sentinel</h2></div>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link">📊 Dashboard</a>
-                <a href="audit-plan.html" class="nav-link">📅 2026 Audit Plan</a>
-                <a href="audit-form.html" class="nav-link active">📝 Conduct Audit</a>
+                <a href="audit-plan.html" class="nav-link">📅 Audit Schedules</a>
             </nav>
         </aside>
-        <main class="main-content">
-            <div class="form-container card">
-                <h2>Internal Audit Entry (ST0096)</h2>
-                <hr>
-                <form id="auditForm">
-                    <label>Audit Scope</label>
-                    <input type="text" value="COSHH Control" readonly>
-                    
-                    <label>Auditee (Process Owner)</label>
-                    <input type="text" placeholder="e.g., G. Seaborn">
-                    
-                    <label>Q1: Is the COSHH policy communicated to all relevant staff?</label>
-                    <select>
-                        <option>Yes (Conforming)</option>
-                        <option>Partial (Minor NC)</option>
-                        <option>No (Major NC)</option>
-                    </select>
 
-                    <label>Evidence Notes</label>
-                    <textarea placeholder="Cite specific SYPOL records..."></textarea>
+        <main class="main-content">
+            <div class="card" style="background:white; padding:30px; border-radius:10px;">
+                <h2 id="formTitle">Loading Questionnaire...</h2>
+                <p id="phaseIndicator" style="font-weight:bold; color:var(--st-orange);"></p>
+                <hr>
+                <form id="activeForm">
+                    <div id="questionArea">
+                        </div>
                     
-                    <div style="margin-top:20px;">
-                        <button type="button" class="btn-primary">Submit for Review</button>
-                        <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">Cancel</button>
+                    <div style="margin-top:30px;">
+                        <button type="button" class="btn-primary" onclick="saveProgress()">💾 Save Progress</button>
+                        <button type="button" class="btn-secondary" onclick="submitFinal()">✅ Final Submission</button>
                     </div>
                 </form>
             </div>
         </main>
     </div>
+
+    <script>
+        // Check day of month to decide Phase
+        const day = new Date().getDate();
+        const phase = day <= 14 ? "INITIAL" : "EVIDENCE";
+        
+        document.getElementById('formTitle').innerText = "Audit Questionnaire (ST0096)";
+        document.getElementById('phaseIndicator').innerText = phase === "INITIAL" ? 
+            "PHASE 1: Initial Assessment (Weeks 1-2)" : 
+            "PHASE 2: Further Evidence Gathering (Weeks 3-4)";
+
+        const questionArea = document.getElementById('questionArea');
+
+        if(phase === "INITIAL") {
+            questionArea.innerHTML = `
+                <label>Q1: Are COSHH assessments available for all substances in your area?</label>
+                <select id="q1"><option>Select...</option><option>Yes</option><option>No</option></select>
+                <br><br>
+                <label>Initial Comments:</label>
+                <textarea id="comments" style="width:100%; height:100px;"></textarea>
+            `;
+        } else {
+            questionArea.innerHTML = `
+                <label>Evidence Upload: Please provide SYPOL screenshots or training logs.</label>
+                <input type="file" multiple>
+                <br><br>
+                <label>Detailed Evidence Notes:</label>
+                <textarea id="evidenceNotes" style="width:100%; height:100px;"></textarea>
+            `;
+        }
+
+        function saveProgress() {
+            alert("Progress saved locally. You can return to complete this before the phase deadline.");
+            // Logic to save to localStorage
+            const data = { q1: document.getElementById('q1')?.value, notes: document.getElementById('comments')?.value };
+            localStorage.setItem('audit_draft', JSON.stringify(data));
+        }
+
+        function submitFinal() {
+            if(confirm("Confirm final submission? No further edits can be made.")) {
+                window.location.href = "index.html";
+            }
+        }
+    </script>
 </body>
 </html>
