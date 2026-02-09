@@ -3,7 +3,6 @@ const PlanGenerator = {
     currentYearData: [],
     editingIndex: null,
     
-    // Updated Departments: Added Engineering and Customer Services
     lists: {
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         depts: ["All departments Managers", "Senior Leadership Team", "Operations", "Engineering", "Customer Services", "HR", "SHEQ", "Commercial", "Finance", "Procurement", "IT", "Facilities", "RSM", "Infrastructure", "Training", "OTHER"],
@@ -108,7 +107,7 @@ const PlanGenerator = {
                         <p class="auditee-text"><strong>Auditee:</strong> ${audit.auditee}</p>
                     </div>
                     ${this.isAdmin ? `<div class="admin-actions">
-                        <button class="btn-edit-sm" onclick="PlanGenerator.openModal(${index})">Edit Details</button>
+                        <button class="btn-edit-sm" onclick="PlanGenerator.openModal(${index})">Edit</button>
                         <button class="btn-delete-sm" onclick="if(confirm('Delete?')){PlanGenerator.currentYearData.splice(${index},1);PlanGenerator.render('${year}')}">Delete</button>
                     </div>` : ''}
                 </div>`;
@@ -120,98 +119,56 @@ const PlanGenerator = {
         return this.lists.months.map(m => ({ month: m, period: 'P1', title: "none", ref: `ST0096/NONE/${year}`, auditee: "n/a", dept: "n/a", status: "PLANNED", type: "Internal" }));
     },
 
-    // AUTOMATED GITHUB PUSH
+    // FULL AUTOMATED PUSH WITH WORKFLOW TRIGGER
     async pushToMaster() {
-        if (!confirm("Are you sure you want to save changes?")) {
-            // If cancel is pressed, clear local changes and logout as requested
-            localStorage.removeItem(`sentinel_backup_${document.getElementById('yearSelector').value}`);
-            window.location.reload(); 
-            return;
-        }
+        if (!confirm("Confirm upload to Supertram AMS Master Memory?")) return;
 
         const year = document.getElementById('yearSelector').value;
+        // Your specific PAT
         const token = "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"; 
-        const repo = "Abuckley-1/SYFTL-AUDIT-MANAGEMENT-SYSTEM";
+        const repo = "abuckley-1/SYFTL-AUDIT-MANAGEMENT-SYSTEM";
         const path = `data/schedules_${year}.json`;
 
         try {
-            // 1. Get current file data to get the SHA hash
+            // 1. Get current SHA for the file
             const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
                 headers: { 'Authorization': `token ${token}` }
             });
             const fileData = await getRes.json();
 
-            // 2. Push the update
+            // 2. Upload the new JSON content
             const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: `Audit update for ${year}`,
+                    message: `SAMS Update: ${year} Schedule`,
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(this.currentYearData, null, 2)))),
                     sha: fileData.sha
                 })
             });
 
             if (putRes.ok) {
-                alert("✅ SUCCESS: Master Memory updated automatically!");
-                localStorage.removeItem(`sentinel_backup_${year}`); // Clear backup after successful live save
+                // 3. TRIGGER MASTER SYNC MANUALLY (This starts the 'robot')
+                await fetch(`https://api.github.com/repos/${repo}/actions/workflows/master-sync.yml/dispatches`, {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json' 
+                    },
+                    body: JSON.stringify({ ref: 'main' })
+                });
+
+                alert("✅ SUCCESS: Data saved and Master Sync triggered!");
+                localStorage.removeItem(`sentinel_backup_${year}`);
+                location.reload(); 
             } else {
-                throw new Error("GitHub rejected the save.");
+                throw new Error("GitHub rejected the push.");
             }
         } catch (err) {
-            alert("❌ ERROR: Could not save to GitHub automatically. Check your internet or GitHub status.");
+            alert("❌ SYNC ERROR: GitHub connection failed. Check your internet or GitHub status.");
             console.error(err);
         }
     }
 };
 
 document.addEventListener('DOMContentLoaded', () => PlanGenerator.loadYear());
-
-async pushToMaster() {
-    if (!confirm("Confirm upload to Supertram AMS Master Memory?")) return;
-
-    const year = document.getElementById('yearSelector').value;
-    const token = "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"; 
-    const repo = "abuckley-1/SYFTL-AUDIT-MANAGEMENT-SYSTEM";
-    const path = `data/schedules_${year}.json`;
-
-    try {
-        // 1. Get the latest file state
-        const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
-            headers: { 'Authorization': `token ${token}` }
-        });
-        const fileData = await getRes.json();
-
-        // 2. Push the data update
-        const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
-            method: 'PUT',
-            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: `SAMS Update: ${year} Schedule`,
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(this.currentYearData, null, 2)))),
-                sha: fileData.sha
-            })
-        });
-
-        if (putRes.ok) {
-            // 3. THE FIX: This specific command triggers the Master Sync robot
-            await fetch(`https://api.github.com/repos/${repo}/actions/workflows/master-sync.yml/dispatches`, {
-                method: 'POST',
-                headers: { 
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json' 
-                },
-                body: JSON.stringify({ ref: 'main' })
-            });
-
-            alert("✅ SUCCESS: Data saved and Master Sync triggered!");
-            localStorage.removeItem(`sentinel_backup_${year}`);
-            location.reload(); 
-        }
-    } catch (err) {
-        alert("❌ Sync Error: GitHub is currently busy. Please try again.");
-    }
-}
