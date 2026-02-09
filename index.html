@@ -2,30 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | Sentinel AMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel AMS - Compliance Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-brand"><h2>Sentinel</h2></div>
-            <nav class="nav-menu">
+            <div class="sidebar-brand">
+                <img src="https://www.supertram.com/images/logo.png" alt="Supertram Logo" class="sidebar-logo">
+                <h2 class="brand-name">Sentinel AMS</h2>
+            </div>
+            <nav class="side-nav">
                 <a href="index.html" class="nav-link active">📊 Dashboard</a>
                 <a href="audit-plan.html" class="nav-link">📅 Audit Schedules</a>
-                <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
+                <a href="conduct-audit.html" class="nav-link">📝 Conduct Audit</a>
             </nav>
         </aside>
+
         <main class="main-content">
             <header class="top-header">
                 <h1>Compliance Dashboard</h1>
-                <span class="pill pill-success">Master Memory: Active</span>
+                <div class="header-status">Master Memory: <span id="syncStatus" style="color: #2ecc71;">Active</span></div>
             </header>
+
             <div class="kpi-grid">
-                <div class="kpi-card orange-top"><h4>Safety Index</h4><div class="value">STD</div></div>
-                <div class="kpi-card navy-top"><h4>Schedules Live</h4><div class="value" id="scheduleCount">12</div></div>
-                <div class="kpi-card red-top"><h4>Major NCs</h4><div class="value">01</div></div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Schedules Live</span>
+                    <div class="kpi-value" id="totalSchedules">0</div>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Completion Rate</span>
+                    <div class="kpi-value" id="completionRate">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Open Actions</span>
+                    <div class="kpi-value" id="openActions">0</div>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Overdue</span>
+                    <div class="kpi-value" id="overdueCount" style="color: #e74c3c;">0</div>
+                </div>
+            </div>
+
+            <div class="dashboard-sections">
+                <div class="data-section">
+                    <h3>Departmental Compliance</h3>
+                    <div id="deptBreakdown" class="chart-replacement-list">
+                        </div>
+                </div>
             </div>
         </main>
     </div>
+
+    <script src="scripts/dashboard.js"></script>
 </body>
 </html>
