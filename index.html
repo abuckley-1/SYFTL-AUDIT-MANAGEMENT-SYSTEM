@@ -1,43 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Supertram Sentinel | Audit Management System</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header class="st-header">
-        <img src="STLogo.jpg" alt="Supertram Logo" class="st-logo">
-        <div class="st-title">
-            <h1>Sentinel Audit System</h1>
-            <span>Ref: ST0096 - SHEQ Compliance</span>
-        </div>
-    </header>
+<main class="dashboard">
+    <div class="kpi-container">
+        <div class="kpi-card"><h4>Safety Index</h4><div class="kpi-value">92%</div><small>↑ 2% vs Prev Month</small></div>
+        <div class="kpi-card"><h4>Audit Completion</h4><div class="kpi-value">100%</div><small>On Target</small></div>
+        <div class="kpi-card"><h4>Avg Risk Score</h4><div class="kpi-value">STD</div><small>Standardised</small></div>
+        <div class="kpi-card"><h4>Open Actions</h4><div class="kpi-value">4</div><small>2 Overdue</small></div>
+    </div>
 
-    <main class="dashboard">
-        <section class="kpi-ribbon">
-            <div class="kpi-card"><h3>Compliance</h3><div class="score" id="kpi-compliance">--%</div></div>
-            <div class="kpi-card"><h3>Open Actions</h3><div class="score" id="kpi-actions">0</div></div>
-            <div class="kpi-card"><h3>Next Audit</h3><div class="detail" id="kpi-next">Dec 2026</div></div>
-        </section>
-
-        <section class="audit-log">
-            <h2>Annual Audit Schedule & Tracker</h2>
-            <table id="auditTable">
-                <thead>
-                    <tr>
-                        <th>Ref Number</th>
-                        <th>Scope</th>
-                        <th>Period</th>
-                        <th>Auditee</th>
-                        <th>Status</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody id="auditBody">
-                    </tbody>
-            </table>
-        </section>
-    </main>
-</body>
-</html>
+    <table class="audit-table">
+        <thead>
+            <tr><th>Ref</th><th>Scope</th><th>Auditee</th><th>Result</th><th>Status</th></tr>
+        </thead>
+        <tbody id="tracker-body">
+            <tr>
+                <td>ST0096/COSHH/2026</td>
+                <td>Hazardous Substances</td>
+                <td>G. Seaborn</td>
+                <td><span class="status managed">Minor NC</span></td>
+                <td>CLOSED</td>
+            </tr>
+        </tbody>
+    </table>
+</main>
