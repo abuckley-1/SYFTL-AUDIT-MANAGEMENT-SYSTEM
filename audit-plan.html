@@ -37,3 +37,37 @@
     <script src="scripts/planGenerator.js"></script>
 </body>
 </html>
+
+<div id="auditModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>Audit Details</h2>
+        <div class="form-group">
+            <label>Audit Title</label>
+            <input type="text" id="modalTitle" placeholder="e.g. Waste Management">
+        </div>
+        <div class="form-group">
+            <label>Auditee Name</label>
+            <input type="text" id="modalAuditee" placeholder="e.g. John Doe">
+        </div>
+        <div class="form-group">
+            <label>Month</label>
+            <input type="text" id="modalMonth">
+        </div>
+        <div class="form-group">
+            <label>Department</label>
+            <select id="modalDept"></select>
+        </div>
+        <div class="form-group">
+            <label>Audit Type</label>
+            <select id="modalType"></select>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select id="modalStatus"></select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="PlanGenerator.closeModal()">Cancel</button>
+            <button class="btn-save" onclick="PlanGenerator.saveModal()">Save Audit</button>
+        </div>
+    </div>
+</div>
