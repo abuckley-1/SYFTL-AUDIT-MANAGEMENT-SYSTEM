@@ -1,0 +1,24 @@
+name: Sync Master Memory
+
+on:
+  repository_dispatch:
+    types: [update_schedule]
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Update Schedule Data
+        run: |
+          echo '${{ github.event.client_payload.data }}' > data/schedules_${{ github.event.client_payload.year }}.json
+
+      - name: Commit to Master Memory
+        run: |
+          git config --local user.email "sentinel-bot@supertram.com"
+          git config --local user.name "Sentinel Bot"
+          git add data/*.json
+          git commit -m "Update Audit Schedule Master Memory [skip ci]"
+          git push
