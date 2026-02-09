@@ -5,18 +5,24 @@ const PlanGenerator = {
     
     lists: {
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        depts: ["All departments Managers", "Senior Leadership Team", "Operations", "HR", "SHEQ", "Commercial", "Finance", "Procurement", "IT", "Facilities", "RSM", "Infrastructure", "Training", "OTHER"],
+        depts: ["All departments Managers", "Senior Leadership Team", "Operations", "Engineering", "Customer Services", "HR", "SHEQ", "Commercial", "Finance", "Procurement", "IT", "Facilities", "RSM", "Infrastructure", "Training", "OTHER"],
         types: ["Internal", "External", "Shadow", "OTHER"],
         status: ["OPEN", "CLOSED", "OVERDUE", "ON-HOLD", "CANCELLED", "PLANNED", "OTHER"]
     },
 
     async loadYear() {
         const year = document.getElementById('yearSelector').value;
-        try {
-            const response = await fetch(`./data/schedules_${year}.json`);
-            this.currentYearData = response.ok ? await response.json() : this.initializeBlankYear(year);
-        } catch (err) {
-            this.currentYearData = this.initializeBlankYear(year);
+        const localBackup = localStorage.getItem(`sentinel_backup_${year}`);
+        
+        if (localBackup) {
+            this.currentYearData = JSON.parse(localBackup);
+        } else {
+            try {
+                const response = await fetch(`./data/schedules_${year}.json`);
+                this.currentYearData = response.ok ? await response.json() : this.initializeBlankYear(year);
+            } catch (err) {
+                this.currentYearData = this.initializeBlankYear(year);
+            }
         }
         this.render(year);
     },
@@ -44,7 +50,6 @@ const PlanGenerator = {
         document.getElementById('modalAuditee').value = audit.auditee === "n/a" ? "" : audit.auditee;
         document.getElementById('modalPeriod').value = audit.period || "";
         
-        // This is the fix: Population of the Month dropdown
         this.fillDropdown('modalMonth', this.lists.months, audit.month);
         this.fillDropdown('modalDept', this.lists.depts, audit.dept);
         this.fillDropdown('modalType', this.lists.types, audit.type);
@@ -87,11 +92,12 @@ const PlanGenerator = {
     deleteAudit(index) {
         if (confirm("Delete this audit?")) {
             this.currentYearData.splice(index, 1);
+            localStorage.setItem(`sentinel_backup_${document.getElementById('yearSelector').value}`, JSON.stringify(this.currentYearData));
             this.render(document.getElementById('yearSelector').value);
         }
     },
 
- render(year) {
+    render(year) {
         const container = document.getElementById('planContainer');
         if (!container) return;
         
@@ -124,8 +130,15 @@ const PlanGenerator = {
     },
 
     pushToMaster() {
-        console.log(JSON.stringify(this.currentYearData, null, 2));
-        alert("Check F12 Console for data to save to your JSON file.");
+        if (confirm("Are you sure you want to save changes?")) {
+            const dataString = JSON.stringify(this.currentYearData, null, 2);
+            console.log(dataString);
+            alert("SUCCESS: Changes pushed to memory. \n\nTo update the live file, copy the data from the Console (F12) into your GitHub file.");
+        } else {
+            // Cancel and Logout
+            localStorage.removeItem(`sentinel_backup_${document.getElementById('yearSelector').value}`);
+            window.location.reload(); 
+        }
     }
 };
 
