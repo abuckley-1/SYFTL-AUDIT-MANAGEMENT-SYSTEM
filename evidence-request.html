@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMS | Evidence Submission Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="evidence-theme">
+    <div class="portal-container">
+        <header class="portal-header">
+            <img src="https://www.supertram.com/images/logo.png" alt="Supertram" class="sidebar-logo">
+            <div class="timer-box danger">
+                <span id="evidenceTimer">14 Days Remaining</span>
+                <p>Until Default Major NC</p>
+            </div>
+        </header>
+
+        <main class="glass-card">
+            <h1>Evidence Request: Stage 2</h1>
+            <p class="subtitle">The following items require further evidence for compliance verification.</p>
+            
+            <div id="evidenceList">
+                </div>
+
+            <div class="form-actions">
+                <button class="btn-primary" onclick="EvidenceModule.submitAll()">Submit Evidence & Finalise</button>
+            </div>
+        </main>
+    </div>
+    <script src="scripts/evidenceModule.js"></script>
+</body>
+</html>
