@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentinel AMS - Compliance Dashboard</title>
+    <title>Sentinel AMS | Executive Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -22,39 +23,59 @@
 
         <main class="main-content">
             <header class="top-header">
-                <h1>Compliance Dashboard</h1>
-                <div class="header-status">Master Memory: <span id="syncStatus" style="color: #2ecc71;">Active</span></div>
+                <div class="header-title">
+                    <h1>Compliance Intelligence</h1>
+                    <p class="subtitle">Real-time Safety & Quality Oversight</p>
+                </div>
+                <div class="sync-indicator">
+                    <span class="pulse-dot"></span> Master Memory: <strong id="syncStatus">CONNECTED</strong>
+                </div>
             </header>
 
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <span class="kpi-label">Schedules Live</span>
-                    <div class="kpi-value" id="totalSchedules">0</div>
+            <div class="tile-grid">
+                <div class="stat-tile primary">
+                    <div class="tile-icon">📋</div>
+                    <div class="tile-data">
+                        <span id="totalSchedules" class="tile-value">--</span>
+                        <span class="tile-label">Annual Audits</span>
+                    </div>
                 </div>
-                <div class="kpi-card">
-                    <span class="kpi-label">Completion Rate</span>
-                    <div class="kpi-value" id="completionRate">0%</div>
+                <div class="stat-tile success">
+                    <div class="tile-icon">🎯</div>
+                    <div class="tile-data">
+                        <span id="completionRate" class="tile-value">--%</span>
+                        <span class="tile-label">Completion KPI</span>
+                    </div>
                 </div>
-                <div class="kpi-card">
-                    <span class="kpi-label">Open Actions</span>
-                    <div class="kpi-value" id="openActions">0</div>
+                <div class="stat-tile warning">
+                    <div class="tile-icon">⏳</div>
+                    <div class="tile-data">
+                        <span id="openActions" class="tile-value">--</span>
+                        <span class="tile-label">Pending Reviews</span>
+                    </div>
                 </div>
-                <div class="kpi-card">
-                    <span class="kpi-label">Overdue</span>
-                    <div class="kpi-value" id="overdueCount" style="color: #e74c3c;">0</div>
+                <div class="stat-tile danger">
+                    <div class="tile-icon">🚨</div>
+                    <div class="tile-data">
+                        <span id="overdueCount" class="tile-value">--</span>
+                        <span class="tile-label">Critical Overdue</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="dashboard-sections">
-                <div class="data-section">
-                    <h3>Departmental Compliance</h3>
-                    <div id="deptBreakdown" class="chart-replacement-list">
+            <div class="analytics-row">
+                <div class="chart-container main-chart">
+                    <h3>Compliance Trends (2025 vs 2026)</h3>
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="chart-container side-list">
+                    <h3>Departmental Leaderboard</h3>
+                    <div id="deptLeaderboard" class="leaderboard-list">
                         </div>
                 </div>
             </div>
         </main>
     </div>
-
     <script src="scripts/dashboard.js"></script>
 </body>
 </html>
