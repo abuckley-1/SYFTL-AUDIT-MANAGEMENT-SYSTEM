@@ -151,3 +151,16 @@ const AuditEngine = {
 
 // Start the engine when the page loads
 document.addEventListener('DOMContentLoaded', () => AuditEngine.init());
+
+checkDeadlines(audit) {
+    if (!audit.notificationSent) return "PLANNED";
+    
+    const issuedDate = new Date(audit.notificationSent);
+    const today = new Date();
+    const diffDays = Math.ceil((today - issuedDate) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 14 && audit.status !== "CLOSED") {
+        return "MAJOR NC (AD-HOC) - AUTO ISSUED";
+    }
+    return `ACTIVE - ${14 - diffDays} DAYS REMAINING`;
+}
