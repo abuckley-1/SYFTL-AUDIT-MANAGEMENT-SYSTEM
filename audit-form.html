@@ -1,50 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>Conduct Audit | Sentinel AMS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header">
-        <img src="STLogo.jpg" class="logo">
-        <div>
-            <h2>Internal Audit Questionnaire</h2>
-            <p>Ref: ST0096 / <span id="auditScope">WASTE</span> / 2026</p>
-        </div>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand"><h2>Sentinel</h2></div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">📊 Dashboard</a>
+                <a href="audit-plan.html" class="nav-link">📅 2026 Audit Plan</a>
+                <a href="audit-form.html" class="nav-link active">📝 Conduct Audit</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="form-container card">
+                <h2>Internal Audit Entry (ST0096)</h2>
+                <hr>
+                <form id="auditForm">
+                    <label>Audit Scope</label>
+                    <input type="text" value="COSHH Control" readonly>
+                    
+                    <label>Auditee (Process Owner)</label>
+                    <input type="text" placeholder="e.g., G. Seaborn">
+                    
+                    <label>Q1: Is the COSHH policy communicated to all relevant staff?</label>
+                    <select>
+                        <option>Yes (Conforming)</option>
+                        <option>Partial (Minor NC)</option>
+                        <option>No (Major NC)</option>
+                    </select>
+
+                    <label>Evidence Notes</label>
+                    <textarea placeholder="Cite specific SYPOL records..."></textarea>
+                    
+                    <div style="margin-top:20px;">
+                        <button type="button" class="btn-primary">Submit for Review</button>
+                        <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
-
-    <div style="max-width: 800px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 10px;">
-        <div id="deadline-warning" style="color: red; font-weight: bold; margin-bottom: 1rem;"></div>
-        
-        <form id="auditForm">
-            <h3>Initial Details</h3>
-            <label>Auditee Name:</label><input type="text" id="auditee" required style="width:100%; margin-bottom:1rem;">
-            <label>Department:</label><input type="text" id="dept" required style="width:100%; margin-bottom:1rem;">
-            
-            <h3>Mandatory Compliance Questions</h3>
-            <div class="q-block">
-                <p>1. What is the business's documented policies and/or procedures with regards the subject matter? (Quote title/ref) [ISO 9001 - 4.4]</p>
-                <textarea id="q1" required></textarea>
-            </div>
-            <div class="q-block">
-                <p>2. Is all relevant instruction communicated and available to all relevant staff? [ISO 45001 - 7.4]</p>
-                <textarea id="q2" required></textarea>
-            </div>
-            <div class="q-block">
-                <p>3. Is TOP management visibly committed to compliance? [ISO 9001 - 5.1]</p>
-                <textarea id="q3" required></textarea>
-            </div>
-            <div class="q-block">
-                <p>4. Are relevant risk assessments up to date? [RM3 - RCS1]</p>
-                <textarea id="q4" required></textarea>
-            </div>
-
-            <h3>Technical Criteria Questions (System Generated)</h3>
-            <div id="dynamic-questions"></div>
-
-            <button type="submit" class="st-button" style="background:var(--st-navy); color:white; padding:10px 20px; border:none; cursor:pointer; width:100%;">Submit Audit Data</button>
-        </form>
-    </div>
-
-    <script src="scripts/auditEngine.js"></script>
 </body>
 </html>
