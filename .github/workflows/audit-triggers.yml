@@ -1,0 +1,15 @@
+name: Supertram Audit Scheduler
+on:
+  schedule:
+    - cron: '0 0 1 12 *' # Runs on Dec 1st every year
+
+jobs:
+  generate-schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Previous Results
+        run: |
+          # Automated Logic: 
+          # If Result == 'Major NC' in previous 12 months,
+          # Create new Audit entry in schedule.json for next year.
+          python3 scripts/automate_shadowing.py
