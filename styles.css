@@ -1,203 +1,65 @@
-/* Supertram Sentinel AMS - Master Stylesheet V15 */
+/* Supertram Sentinel AMS - Master Styles V16 */
 :root {
     --st-navy: #1D3C6E;
     --st-orange: #F26522;
     --st-red: #E30613;
-    --st-purple: #8B5CF6; /* For External Audits */
-    --st-planned: #6D28D9; /* For Planned Status */
-    --st-gray: #64748B;
     --bg: #F4F7F9;
 }
 
-* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); }
+.app-container { display: flex; min-height: 100vh; }
 
-body { 
-    margin: 0; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    background: var(--bg); 
-    color: #333; 
-    line-height: 1.5;
-}
-
-.app-container { display: flex; width: 100%; min-height: 100vh; }
-
-/* --- Sidebar Navigation --- */
-.sidebar { 
-    width: 260px; 
-    background: var(--st-navy); 
-    color: white; 
-    position: fixed; 
-    height: 100%; 
-    z-index: 100;
-}
-.sidebar-brand { 
-    padding: 30px 20px; 
-    border-bottom: 1px solid rgba(255,255,255,0.1); 
-    text-align: center;
-}
-.logo { width: 140px; margin-bottom: 10px; }
-
-.nav-link { 
-    color: #A0B3CE; 
-    text-decoration: none; 
-    padding: 15px 25px; 
-    display: block; 
-    border-left: 4px solid transparent;
-    transition: 0.3s;
-}
-.nav-link:hover, .nav-link.active { 
-    background: rgba(255,255,255,0.1); 
-    color: var(--st-orange); 
-    border-left-color: var(--st-orange); 
-}
-
-/* --- Main Content Layout --- */
+/* Sidebar & Layout */
+.sidebar { width: 260px; background: var(--st-navy); color: white; position: fixed; height: 100%; padding-top: 20px; }
 .main-content { margin-left: 260px; flex: 1; padding: 40px; }
 
-.top-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 30px; 
-    flex-wrap: wrap;
-    gap: 20px;
-}
+/* Grid */
+.calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.month-card { background: white; padding: 20px; border-radius: 12px; border-left: 6px solid #ccc; position: relative; min-height: 280px; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-/* --- Audit Grid & Cards --- */
-.calendar-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-    gap: 25px; 
-}
+/* Status Badges */
+.status-badge { position: absolute; top: 15px; right: 15px; font-size: 0.65rem; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+.badge-open { background: #E0F2FE; color: #0369A1; }
+.badge-closed { background: #DCFCE7; color: #15803D; }
+.badge-planned { background: #EDE9FE; color: #6D28D9; }
+.badge-overdue { background: #FEE2E2; color: #B91C1C; }
 
-.month-card { 
-    background: white; 
-    padding: 25px; 
-    border-radius: 12px; 
-    border-left: 6px solid #CBD5E1; 
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 300px; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.month-card:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1); 
-}
-
-/* --- Audit Type Visual Indicators --- */
-.card-type-external { border-left-color: var(--st-purple) !important; }
-.card-type-shadow { border-left-color: var(--st-red) !important; }
-
-/* --- Text Wrapping & Typography --- */
-.month-label { font-weight: 800; font-size: 1.4rem; color: var(--st-navy); margin-bottom: 5px; }
-
-.type-tag { 
-    font-size: 0.7rem; 
-    font-weight: bold; 
-    color: var(--st-orange); 
-    text-transform: uppercase; 
-    margin-bottom: 8px;
-    display: block;
-}
-
-.wrap-text { 
-    word-wrap: break-word; 
-    white-space: normal; 
-    margin: 10px 0; 
-    font-size: 1.25rem;
-    line-height: 1.3;
-    color: var(--st-navy);
-}
-
-.ref-text, .auditee-text { 
-    font-size: 0.85rem; 
-    color: var(--st-gray); 
-    margin: 4px 0;
-    word-break: break-all; 
-}
-
-/* --- Professional Status Badges --- */
-.status-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 0.65rem;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.badge-open { background: #E0F2FE; color: #0369A1; }      /* Blue */
-.badge-closed { background: #DCFCE7; color: #15803D; }    /* Green */
-.badge-overdue { background: #FEE2E2; color: #B91C1C; }   /* Red */
-.badge-on-hold { background: #FEF3C7; color: #B45309; }   /* Amber */
-.badge-cancelled { background: #F1F5F9; color: #475569; } /* Gray */
-.badge-planned { background: #EDE9FE; color: var(--st-planned); } /* Purple */
-.badge-other { background: #F3F4F6; color: #1F2937; border: 1px solid #D1D5DB; }
-
-/* --- Buttons & Admin Actions --- */
-.btn-primary { 
-    background: var(--st-navy); 
-    color: white; 
-    border: none; 
-    padding: 12px 24px; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-weight: 600;
-    transition: 0.3s;
-}
-.btn-primary:hover { background: var(--st-orange); }
-
-.admin-actions { 
-    display: flex; 
-    gap: 10px; 
-    margin-top: auto; 
-    padding-top: 15px;
-}
-
-.btn-edit-sm { 
-    background: var(--st-navy); 
-    color: white; 
-    border: none; 
-    padding: 8px; 
-    flex: 1; 
-    border-radius: 4px; 
-    cursor: pointer;
-}
-
-.btn-delete-sm { 
-    background: #94A3B8; 
-    color: white; 
-    border: none; 
-    padding: 8px; 
-    flex: 1; 
-    border-radius: 4px; 
-    cursor: pointer;
-}
-
-/* --- Add New Audit Button Tile --- */
-.add-new-card {
-    border: 2px dashed #CBD5E1;
-    background: transparent !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* Custom Modal UI */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
     justify-content: center;
-    text-align: center;
-    color: var(--st-gray);
-    cursor: pointer;
+    align-items: center;
 }
 
-.plus-icon { font-size: 2.5rem; display: block; margin-bottom: 5px; }
-
-/* --- Responsive Layout --- */
-@media (max-width: 768px) {
-    .sidebar { width: 70px; }
-    .sidebar-brand h2, .nav-link span { display: none; }
-    .main-content { margin-left: 70px; }
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 450px;
+    box-shadow: 0 20px 25px rgba(0,0,0,0.2);
 }
+
+.modal-content h2 { color: var(--st-navy); margin-top: 0; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--st-gray); margin-bottom: 5px; }
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+.btn-save { background: var(--st-navy); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
+.btn-cancel { background: #eee; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; }
+
+/* Admin Actions */
+.admin-actions { display: flex; gap: 5px; margin-top: auto; }
+.btn-edit-sm { background: var(--st-navy); color: white; border: none; padding: 8px; border-radius: 4px; flex: 1; cursor: pointer; }
+.btn-delete-sm { background: #94A3B8; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; }
+.wrap-text { word-wrap: break-word; }
