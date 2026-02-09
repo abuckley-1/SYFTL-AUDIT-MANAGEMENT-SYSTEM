@@ -1,12 +1,30 @@
-name: Daily Audit Notification Check
+name: Sentinel Daily Compliance Check
+
 on:
   schedule:
-    - cron: '0 9 * * *' # Runs daily at 9am
+    # This runs the script every day at 09:00 UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allows you to run it manually for testing
+
 jobs:
-  build:
+  compliance-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: Run Mailer Script
-        run: node scripts/autoMailer.js
+      - name: Checkout Repository Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Run Sentinel Automation Engine
+        run: node scripts/auditAutomation.js
+
+      - name: Auto-Commit Shadow Audit Updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "System: Automated Shadow Audit/NC Update" || echo "No changes to commit"
+          git push
