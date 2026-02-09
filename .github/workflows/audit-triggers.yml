@@ -1,15 +1,42 @@
-name: Supertram Audit Scheduler
+name: Sentinel Daily Compliance Engine
+
+# This section controls WHEN the automation runs
 on:
   schedule:
-    - cron: '0 0 1 12 *' # Runs on Dec 1st every year
+    # Runs every day at 09:00 AM UTC to check for 14-day breaches and 1-month notices
+    - cron: '0 9 * * *'
+  
+  # Allows you to manually trigger the automation from the GitHub "Actions" tab for testing
+  workflow_dispatch:
 
 jobs:
-  generate-schedule:
+  run-automation:
     runs-on: ubuntu-latest
+    
+    # Permissions required to allow the bot to update your tracker/schedule files
+    permissions:
+      contents: write
+
     steps:
-      - name: Check Previous Results
+      # 1. Pulls your code from the repository into the runner
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2. Sets up the environment to run your JavaScript
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Executes the "Brain" of the system
+      - name: Run Sentinel Automation Logic
+        run: node scripts/auditAutomation.js
+
+      # 4. If the script found a Major NC or scheduled a Shadow Audit, this saves the changes
+      - name: Commit and Push Changes
         run: |
-          # Automated Logic: 
-          # If Result == 'Major NC' in previous 12 months,
-          # Create new Audit entry in schedule.json for next year.
-          python3 scripts/automate_shadowing.py
+          git config --local user.email "action@github.com"
+          git config --local user.name "Sentinel-Bot"
+          git add .
+          git commit -m "System Update: Automated Shadow Audit/NC Triggered" || echo "No changes to commit"
+          git push
