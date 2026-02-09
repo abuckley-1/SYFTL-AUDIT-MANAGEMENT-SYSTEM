@@ -1,34 +1,32 @@
 /**
- * Supertram Sentinel - Plan Generator V12
- * Features: Blank Year Initialization, Multi-Field Manual Override, 
- * Auto-Ref Generation, and Text-Wrapping.
+ * Supertram Sentinel - Plan Generator V14
+ * Features: Standardized Dropdowns, Future-Date Logic (PLANNED), 
+ * and persistent Add/Edit Manual Overrides.
  */
 
 const PlanGenerator = {
     isAdmin: false,
     currentYearData: [],
-    depts: ["Engineering", "Operations", "SHEQ", "Customer Service", "Facilities", "Stores", "Executive"],
-    types: ["Internal", "External", "Shadow"],
+    
+    // Standardized Options for Dropdowns
+    lists: {
+        depts: ["All departments Managers", "Senior Leadership Team", "Operations", "HR", "SHEQ", "Commercial", "Finance", "Procurement", "IT", "Facilities", "RSM", "Infrastructure", "Training", "OTHER"],
+        types: ["Internal", "External", "Shadow", "OTHER"],
+        status: ["OPEN", "CLOSED", "OVERDUE", "ON-HOLD", "CANCELLED", "PLANNED", "OTHER"]
+    },
 
     async loadYear() {
         const year = document.getElementById('yearSelector').value;
         const container = document.getElementById('planContainer');
-        if (container) container.innerHTML = "<p style='padding:20px;'>Accessing Master Memory...</p>";
+        if (container) container.innerHTML = "<p style='padding:20px;'>Syncing Master Memory...</p>";
 
         try {
-            // 1. Try to fetch the master file from GitHub
             const response = await fetch(`./data/schedules_${year}.json`);
             if (response.ok) {
                 this.currentYearData = await response.json();
             } else {
-                // 2. If file doesn't exist, check for unpushed local edits
                 const local = localStorage.getItem(`sentinel_backup_${year}`);
-                if (local) {
-                    this.currentYearData = JSON.parse(local);
-                } else {
-                    // 3. If totally blank, initialize with the 12-month 'none' template
-                    this.currentYearData = this.initializeBlankYear(year);
-                }
+                this.currentYearData = local ? JSON.parse(local) : this.initializeBlankYear(year);
             }
         } catch (err) {
             this.currentYearData = this.initializeBlankYear(year);
@@ -41,62 +39,94 @@ const PlanGenerator = {
         if (pass === "SupertramSHEQ2026") {
             this.isAdmin = true;
             this.loadYear();
-        } else {
-            alert("Incorrect Password.");
         }
     },
 
-    // MANUAL OVERRIDE / FULL EDITOR
-    editAudit(year, index) {
-        const audit = this.currentYearData[index];
-        
-        // Step-by-step prompts to capture all required metadata
-        const newTitle = prompt("Audit Title (e.g. WASTE):", audit.title === "none" ? "" : audit.title);
-        if (newTitle === null) return; 
-
-        const newAuditee = prompt("Auditee Name:", audit.auditee === "n/a" ? "" : audit.auditee);
-        const newDept = prompt(`Department (${this.depts.join("/")}):`, audit.dept || "SHEQ");
-        const newType = prompt(`Type (Internal/External/Shadow):`, audit.type || "Internal");
-        const newStatus = prompt("Status (Open/Closed/Overdue/On Hold/Cancelled):", audit.status || "Open");
-
-        // Update the data object
-        this.currentYearData[index] = {
-            ...audit,
-            title: newTitle || "none",
-            auditee: newAuditee || "n/a",
-            dept: newDept || "n/a",
-            type: newType || "Internal",
-            status: newStatus || (newTitle === "none" ? "Closed" : "Open"),
-            // Auto-generate Smart Ref based on Title
-            ref: newTitle && newTitle !== "none" ? `ST0096/${newTitle.toUpperCase().replace(/\s+/g, '')}/${year}` : `ST0096/NONE/${year}`
-        };
-        
-        localStorage.setItem(`sentinel_backup_${year}`, JSON.stringify(this.currentYearData));
-        this.render(year);
+    // HELPER: Create a numbered list for prompt selection (Acting as a dropdown)
+    selectFromList(listName, promptText) {
+        const options = this.lists[listName];
+        let menu = promptText + "\n" + options.map((opt, i) => `${i + 1}: ${opt}`).join("\n");
+        let choice = prompt(menu);
+        let index = parseInt(choice) - 1;
+        return (options[index]) ? options[index] : options[options.length - 1]; // Default to OTHER
     },
 
-    // INITIALIZE A BLANK YEAR TEMPLATE
+    addNewAudit(year) {
+        const title = prompt("New Audit Title (e.g. Spot Check):");
+        if (!title) return;
+
+        const month = prompt("Which month? (e.g. Feb):", "Jan");
+        const auditee = prompt("Auditee Name:");
+        
+        // Use Dropdowns
+        const dept = this.selectFromList("depts", "Select Department:");
+        const type = this.selectFromList("types", "Select Audit Type:");
+        const status = this.selectFromList("status", "Select Status:");
+
+        this.currentYearData.push({
+            month, title, auditee, dept, type, status,
+            ref: `ST0096/${title.toUpperCase().replace(/\s+/g, '')}/${year}`
+        });
+        this.saveAndRefresh(year);
+    },
+
+    editAudit(year, index) {
+        const audit = this.currentYearData[index];
+        const newTitle = prompt("Audit Title:", audit.title);
+        if (newTitle === null) return;
+
+        const newAuditee = prompt("Auditee Name:", audit.auditee);
+        
+        // Dropdown selections
+        const newDept = this.selectFromList("depts", "Select Department:");
+        const newType = this.selectFromList("types", "Select Audit Type:");
+        const newStatus = this.selectFromList("status", "Select Status:");
+
+        this.currentYearData[index] = {
+            ...audit,
+            title: newTitle,
+            auditee: newAuditee || "TBC",
+            dept: newDept,
+            type: newType,
+            status: newStatus,
+            ref: `ST0096/${newTitle.toUpperCase().replace(/\s+/g, '')}/${year}`
+        };
+        this.saveAndRefresh(year);
+    },
+
     initializeBlankYear(year) {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        return months.map(m => ({ 
-            month: m, 
-            title: "none", 
-            ref: `ST0096/NONE/${year}`, 
-            auditee: "n/a", 
-            dept: "n/a", 
-            status: "Closed", 
-            type: "Internal" 
-        }));
+        const currentMonthIdx = new Date().getMonth();
+        const currentYearIdx = new Date().getFullYear();
+
+        return months.map((m, idx) => {
+            // Logic: If month is in the future, default to PLANNED
+            let defaultStatus = (idx > currentMonthIdx && year >= currentYearIdx) ? "PLANNED" : "CLOSED";
+            return { 
+                month: m, title: "none", ref: `ST0096/NONE/${year}`, 
+                auditee: "n/a", dept: "n/a", status: defaultStatus, type: "Internal" 
+            };
+        });
+    },
+
+    saveAndRefresh(year) {
+        localStorage.setItem(`sentinel_backup_${year}`, JSON.stringify(this.currentYearData));
+        this.render(year);
     },
 
     render(year) {
         const container = document.getElementById('planContainer');
         if (!container) return;
-
         let html = '';
+        
+        if (this.isAdmin) {
+            html += `<div class="month-card add-new-card" onclick="PlanGenerator.addNewAudit('${year}')">
+                        <div class="plus-icon">+</div><p>Add New Audit Tile</p>
+                     </div>`;
+        }
+
         this.currentYearData.forEach((audit, index) => {
-            const isNone = audit.title.toLowerCase() === 'none';
-            const statusClass = (audit.status || 'Open').toLowerCase().replace(/\s+/g, '-');
+            const statusClass = (audit.status || 'OPEN').toLowerCase().replace(/\s+/g, '-');
             const typeClass = (audit.type || 'Internal').toLowerCase();
 
             html += `
@@ -110,26 +140,13 @@ const PlanGenerator = {
                         <p class="auditee-text"><strong>Dept:</strong> ${audit.dept}</p>
                         <p class="auditee-text"><strong>Auditee:</strong> ${audit.auditee}</p>
                     </div>
-                    ${this.isAdmin ? `
-                        <div class="admin-actions">
-                            <button class="btn-edit-sm" onclick="PlanGenerator.editAudit('${year}', ${index})">Edit / Override</button>
-                        </div>` : ''}
+                    ${this.isAdmin ? `<div class="admin-actions">
+                        <button class="btn-edit-sm" onclick="PlanGenerator.editAudit('${year}', ${index})">Edit Details</button>
+                        <button class="btn-delete-sm" onclick="PlanGenerator.deleteAudit('${year}', ${index})">Delete</button>
+                    </div>` : ''}
                 </div>`;
         });
-        
-        if(this.isAdmin) {
-            html += `<div style="grid-column: 1/-1; text-align: center; margin-top: 30px;">
-                        <button class="btn-primary" onclick="PlanGenerator.pushToMaster('${year}')">🚀 Push Changes to Master Memory</button>
-                     </div>`;
-        }
         container.innerHTML = html;
-    },
-
-    pushToMaster(year) {
-        // Prepare the JSON for the GitHub data/ folder
-        const output = JSON.stringify(this.currentYearData, null, 2);
-        console.log("DATA_FOR_MASTER_FILE:", output);
-        alert("Syncing with GitHub. Ensure you copy the 'DATA_FOR_MASTER_FILE' from the console into your data/schedules_" + year + ".json file.");
     }
 };
 
