@@ -34,17 +34,19 @@
 
             <div class="calendar-grid" id="planContainer"></div>
 
-            <div id="syncContainer" class="sync-footer" style="display:none; text-align:center; margin-top:30px;">
-                <button class="btn-save" style="max-width:300px;" onclick="PlanGenerator.pushToMaster()">🚀 Push Changes to Master Memory</button>
+            <div id="syncContainer" class="sync-footer" style="display:none; text-align:center; padding: 40px 0;">
+                <button class="btn-save" style="max-width:400px; background-color: #F26522;" onclick="PlanGenerator.pushToMaster()">
+                    🚀 Push Changes to Master Memory
+                </button>
             </div>
         </main>
     </div>
 
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content small-modal">
-            <h2>Admin Login</h2>
+            <h2>Admin Authentication</h2>
             <div class="form-group">
-                <label>Password</label>
+                <label>Audit Team Password</label>
                 <input type="password" id="adminPass" placeholder="Enter Password">
             </div>
             <div class="modal-footer">
