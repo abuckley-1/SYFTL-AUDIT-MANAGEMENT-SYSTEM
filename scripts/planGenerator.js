@@ -3,6 +3,7 @@ const PlanGenerator = {
     currentYearData: [],
     editingIndex: null,
     
+    // Updated Departments: Added Engineering and Customer Services
     lists: {
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         depts: ["All departments Managers", "Senior Leadership Team", "Operations", "Engineering", "Customer Services", "HR", "SHEQ", "Commercial", "Finance", "Procurement", "IT", "Facilities", "RSM", "Infrastructure", "Training", "OTHER"],
@@ -85,29 +86,19 @@ const PlanGenerator = {
         else this.currentYearData.push(updatedAudit);
 
         localStorage.setItem(`sentinel_backup_${year}`, JSON.stringify(this.currentYearData));
-        this.closeModal();
         this.render(year);
-    },
-
-    deleteAudit(index) {
-        if (confirm("Delete this audit?")) {
-            this.currentYearData.splice(index, 1);
-            localStorage.setItem(`sentinel_backup_${document.getElementById('yearSelector').value}`, JSON.stringify(this.currentYearData));
-            this.render(document.getElementById('yearSelector').value);
-        }
+        this.closeModal();
     },
 
     render(year) {
         const container = document.getElementById('planContainer');
-        if (!container) return;
-        
-        let html = this.isAdmin ? `<div class="month-card add-new-card" onclick="PlanGenerator.openModal()">+<br><span style="font-size:1rem">Add Audit</span></div>` : '';
+        let html = this.isAdmin ? `<div class="month-card add-new-card" onclick="PlanGenerator.openModal()">+<br><span style="font-size:1rem">Add Audit to ${year}</span></div>` : '';
 
         this.currentYearData.forEach((audit, index) => {
             const statusClass = audit.status.toLowerCase().replace(/\s+/g, '-');
             html += `
-                <div class="month-card card-type-${audit.type.toLowerCase()}">
-                    <div class="month-label">${audit.month} <span style="font-size:0.8rem; color:#999; font-weight:normal;">(${audit.period || 'N/A'})</span></div>
+                <div class="month-card">
+                    <div class="month-label">${audit.month} <span style="font-size:0.8rem; color:#999;">(${audit.period || 'N/A'})</span></div>
                     <div class="status-badge badge-${statusClass}">${audit.status}</div>
                     <div class="audit-info">
                         <span class="type-tag">${audit.type}</span>
@@ -118,7 +109,7 @@ const PlanGenerator = {
                     </div>
                     ${this.isAdmin ? `<div class="admin-actions">
                         <button class="btn-edit-sm" onclick="PlanGenerator.openModal(${index})">Edit Details</button>
-                        <button class="btn-delete-sm" onclick="PlanGenerator.deleteAudit(${index})">Delete</button>
+                        <button class="btn-delete-sm" onclick="if(confirm('Delete?')){PlanGenerator.currentYearData.splice(${index},1);PlanGenerator.render('${year}')}">Delete</button>
                     </div>` : ''}
                 </div>`;
         });
@@ -129,15 +120,50 @@ const PlanGenerator = {
         return this.lists.months.map(m => ({ month: m, period: 'P1', title: "none", ref: `ST0096/NONE/${year}`, auditee: "n/a", dept: "n/a", status: "PLANNED", type: "Internal" }));
     },
 
-    pushToMaster() {
-        if (confirm("Are you sure you want to save changes?")) {
-            const dataString = JSON.stringify(this.currentYearData, null, 2);
-            console.log(dataString);
-            alert("SUCCESS: Changes pushed to memory. \n\nTo update the live file, copy the data from the Console (F12) into your GitHub file.");
-        } else {
-            // Cancel and Logout
+    // AUTOMATED GITHUB PUSH
+    async pushToMaster() {
+        if (!confirm("Are you sure you want to save changes?")) {
+            // If cancel is pressed, clear local changes and logout as requested
             localStorage.removeItem(`sentinel_backup_${document.getElementById('yearSelector').value}`);
             window.location.reload(); 
+            return;
+        }
+
+        const year = document.getElementById('yearSelector').value;
+        const token = "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"; 
+        const repo = "Abuckley-1/SYFTL-AUDIT-MANAGEMENT-SYSTEM";
+        const path = `data/schedules_${year}.json`;
+
+        try {
+            // 1. Get current file data to get the SHA hash
+            const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            const fileData = await getRes.json();
+
+            // 2. Push the update
+            const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `Audit update for ${year}`,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(this.currentYearData, null, 2)))),
+                    sha: fileData.sha
+                })
+            });
+
+            if (putRes.ok) {
+                alert("✅ SUCCESS: Master Memory updated automatically!");
+                localStorage.removeItem(`sentinel_backup_${year}`); // Clear backup after successful live save
+            } else {
+                throw new Error("GitHub rejected the save.");
+            }
+        } catch (err) {
+            alert("❌ ERROR: Could not save to GitHub automatically. Check your internet or GitHub status.");
+            console.error(err);
         }
     }
 };
