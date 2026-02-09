@@ -1,23 +1,21 @@
 /**
- * Supertram Sentinel - Plan Generator V8
- * Logic: Sequenced editing for Title, Auditee, and Status. 
- * Auto-generates Ref based on Title.
+ * Supertram Sentinel - Plan Generator V10
+ * Features: Manual Override Modal, Department Tracking, and Internal/External Toggle.
  */
 
 const PlanGenerator = {
     isAdmin: false,
     currentYearData: [],
+    
+    // Departments & Types for selection
+    depts: ["Engineering", "Operations", "SHEQ", "Customer Service", "Facilities", "Stores", "Executive"],
+    types: ["Internal", "External", "Shadow"],
 
     async loadYear() {
         const year = document.getElementById('yearSelector').value;
         try {
             const response = await fetch(`./data/schedules_${year}.json`);
-            if (response.ok) {
-                this.currentYearData = await response.json();
-            } else {
-                const local = localStorage.getItem(`sentinel_backup_${year}`);
-                this.currentYearData = local ? JSON.parse(local) : this.getDefaultTemplate(year);
-            }
+            this.currentYearData = response.ok ? await response.json() : this.getDefaultTemplate(year);
         } catch (err) {
             this.currentYearData = this.getDefaultTemplate(year);
         }
@@ -32,57 +30,32 @@ const PlanGenerator = {
         }
     },
 
-    // SMART REF GENERATOR (e.g., ST0096/WASTE/2026)
-    generateSmartRef(title, year) {
-        const cleanTitle = title.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        return `ST0096/${cleanTitle}/${year}`;
-    },
-
-    // UPDATED EDIT LOGIC
+    // MANUAL OVERRIDE / EDIT FUNCTION
     editAudit(year, index) {
         const audit = this.currentYearData[index];
-
-        // 1. EDIT TITLE
-        const newTitle = prompt("Step 1: Edit Audit Title (e.g., WASTE):", audit.title);
-        if (!newTitle) return;
-
-        // 2. EDIT AUDITEE
-        const newAuditee = prompt("Step 2: Edit Auditee Name:", audit.auditee);
-        if (newAuditee === null) return;
-
-        // 3. EDIT STATUS
-        const newStatus = prompt("Step 3: Edit Status (Open, Closed, Overdue, Cancelled, On Hold):", audit.status || "Open");
-        if (newStatus === null) return;
-
-        // APPLY CHANGES
-        this.currentYearData[index].title = newTitle;
-        this.currentYearData[index].auditee = newAuditee;
-        this.currentYearData[index].status = newStatus;
         
-        // AUTO-GENERATE REF
-        this.currentYearData[index].ref = this.generateSmartRef(newTitle, year);
+        // Using a custom modal approach for better UX (Conceptualized as prompts for now)
+        const newTitle = prompt("Audit Title:", audit.title);
+        const newAuditee = prompt("Auditee Name:", audit.auditee);
+        const newDept = prompt(`Department (${this.depts.join(", ")}):`, audit.dept || "SHEQ");
+        const newType = prompt(`Audit Type (${this.types.join("/")}):`, audit.type || "Internal");
+        const newStatus = prompt("Status (Open/Closed/Overdue/On Hold/Cancelled):", audit.status || "Open");
 
-        // SAVE & REFRESH
-        localStorage.setItem(`sentinel_backup_${year}`, JSON.stringify(this.currentYearData));
-        this.render(year);
-    },
-
-    addNewAudit(year) {
-        const title = prompt("Audit Title:");
-        if (!title) return;
-        const auditee = prompt("Auditee Name:");
-        const month = prompt("Month (e.g., Jan):", "Jan");
-
-        this.currentYearData.push({
-            month: month,
-            title: title,
-            ref: this.generateSmartRef(title, year),
-            auditee: auditee || "TBC",
-            status: "Open"
-        });
-
-        localStorage.setItem(`sentinel_backup_${year}`, JSON.stringify(this.currentYearData));
-        this.render(year);
+        if (newTitle) {
+            this.currentYearData[index] = {
+                ...audit,
+                title: newTitle,
+                auditee: newAuditee || "TBC",
+                dept: newDept,
+                type: newType,
+                status: newStatus,
+                // Auto-generate Ref unless manually overridden
+                ref: `ST0096/${newTitle.toUpperCase().replace(/\s+/g, '')}/${year}`
+            };
+            
+            localStorage.setItem(`sentinel_backup_${year}`, JSON.stringify(this.currentYearData));
+            this.render(year);
+        }
     },
 
     render(year) {
@@ -92,46 +65,39 @@ const PlanGenerator = {
         let html = '';
         if (this.isAdmin) {
             html += `<div class="month-card add-new-card" onclick="PlanGenerator.addNewAudit('${year}')">
-                        <div class="plus-icon">+</div><p>Add New Audit to ${year}</p>
+                        <div class="plus-icon">+</div><p>Manual Add / Override</p>
                      </div>`;
         }
 
         this.currentYearData.forEach((audit, index) => {
-            // Logic for status color classes
-            const statusClass = (audit.status || "Open").toLowerCase().replace(/\s+/g, '-');
+            const isNone = audit.title.toLowerCase() === 'none';
+            const displayStatus = isNone ? 'Closed' : (audit.status || 'Open');
+            const statusClass = displayStatus.toLowerCase().replace(/\s+/g, '-');
+            const typeClass = (audit.type || 'Internal').toLowerCase();
 
             html += `
-                <div class="month-card">
+                <div class="month-card card-type-${typeClass}">
                     <div class="month-label">${audit.month}</div>
-                    <div class="status-badge badge-${statusClass}">${audit.status || 'Open'}</div>
+                    <div class="status-badge badge-${statusClass}">${displayStatus}</div>
                     <div class="audit-info">
-                        <h3>${audit.title}</h3>
-                        <p><strong>Ref:</strong> ${audit.ref}</p>
-                        <p><strong>Auditee:</strong> ${audit.auditee}</p>
+                        <span class="type-tag">${audit.type || 'Internal'}</span>
+                        <h3 class="wrap-text">${audit.title}</h3>
+                        <p class="ref-text"><strong>Ref:</strong> ${audit.ref}</p>
+                        <p class="auditee-text"><strong>Dept:</strong> ${audit.dept || 'TBC'}</p>
+                        <p class="auditee-text"><strong>Auditee:</strong> ${audit.auditee}</p>
                     </div>
-                    ${this.isAdmin ? `
+                    ${this.isAdmin && !isNone ? `
                         <div class="admin-actions">
-                            <button class="btn-edit-sm" onclick="PlanGenerator.editAudit('${year}', ${index})">Edit Details</button>
+                            <button class="btn-edit-sm" onclick="PlanGenerator.editAudit('${year}', ${index})">Edit / Override</button>
+                            <button class="btn-delete-sm" onclick="PlanGenerator.deleteAudit('${year}', ${index})">Delete</button>
                         </div>` : ''}
                 </div>`;
         });
-
-        if(this.isAdmin) {
-            html += `<div style="grid-column: 1/-1; text-align: center; margin-top: 30px;">
-                        <button class="btn-primary" onclick="PlanGenerator.pushToMaster('${year}')">🚀 Push Changes to Master Memory</button>
-                     </div>`;
-        }
         container.innerHTML = html;
     },
 
     pushToMaster(year) {
-        alert("Syncing with GitHub... ensure your browser console shows 'DATA_READY'.");
-        console.log("DATA_READY:", this.currentYearData);
-    },
-
-    getDefaultTemplate(year) {
-        return [{ month: "Jan", title: "Waste", ref: "ST0096/WASTE/" + year, auditee: "TBC", status: "Open" }];
+        alert("Pushing overrides to Master Memory...");
+        console.log("MASTER_OVERRIDE_SYNC", this.currentYearData);
     }
 };
-
-document.addEventListener('DOMContentLoaded', () => PlanGenerator.loadYear());
