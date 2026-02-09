@@ -8,11 +8,16 @@
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-brand"><img src="STLogo.jpg" alt="Logo" class="logo"><h2>Sentinel</h2></div>
+            <div class="sidebar-brand">
+                <img src="STLogo.jpg" alt="Supertram Logo" class="logo">
+                <h2>Sentinel AMS</h2>
+            </div>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link">📊 Dashboard</a>
                 <a href="audit-plan.html" class="nav-link active">📅 Audit Schedules</a>
                 <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-link">🏠 SHEQ Landing Page</a>
             </nav>
         </aside>
 
@@ -20,7 +25,7 @@
             <header class="top-header">
                 <div>
                     <h1>Audit Schedules</h1>
-                    <p>Select year and manage internal compliance cycles.</p>
+                    <p>Manage past, present, and future internal compliance cycles.</p>
                 </div>
                 <div class="header-controls">
                     <select id="yearSelector" onchange="PlanGenerator.loadYear()">
@@ -29,7 +34,7 @@
                         <option value="2026" selected>2026</option>
                         <option value="2027">2027</option>
                     </select>
-                    <button class="btn-secondary" onclick="PlanGenerator.authenticateAdmin()">🔐 Edit Schedule</button>
+                    <button class="btn-secondary" onclick="PlanGenerator.authenticateAdmin()">🔐 Audit Team Login</button>
                 </div>
             </header>
 
