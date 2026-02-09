@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Supertram Sentinel | Audit Management System</title>
+    <title>Supertram Sentinel | AMS Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,52 +14,45 @@
             </div>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link active">📊 Dashboard</a>
-                <a href="audit-form.html" class="nav-link">📝 Conduct New Audit</a>
-                <a href="#" class="nav-link">📅 2026 Audit Plan</a>
-                <a href="#" class="nav-link">⚠️ Risk Register</a>
+                <a href="audit-plan.html" class="nav-link">📅 2026 Audit Plan</a>
+                <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
                 <div class="nav-divider"></div>
-                <a href="https://abuckley-1.github.io/Supertram---SHEQ-landing-page/" class="nav-link">🔙 Back to SHEQ Portal</a>
+                <a href="#" class="nav-link">🏠 SHEQ Main Portal</a>
             </nav>
         </aside>
 
         <main class="main-content">
             <header class="top-header">
-                <div class="header-info">
-                    <h1>Compliance Dashboard</h1>
-                    <p>Ref: ST0096 Systems Management [cite: 132]</p>
-                </div>
-                <button class="btn-primary" onclick="window.location.href='audit-form.html'">+ Start Scheduled Audit</button>
+                <h1>Compliance Dashboard</h1>
+                <button class="btn-primary" onclick="window.location.href='audit-form.html'">+ New Audit Entry</button>
             </header>
 
             <section class="kpi-grid">
                 <div class="kpi-card orange-top">
-                    <h4>Current Safety Index</h4>
-                    <div class="value">92%</div>
-                    <p>↑ 2% vs Last Period</p>
+                    <h4>Safety Index</h4>
+                    <div class="value">STD</div>
+                    <p>Target: Predictable (RM3)</p>
                 </div>
                 <div class="kpi-card navy-top">
-                    <h4>Audit Completion</h4>
-                    <div class="value">5/12</div>
-                    <p>On Target for 2026</p>
+                    <h4>Plan Progress</h4>
+                    <div class="value">01/12</div>
+                    <p>Next: Fire Safety (Feb)</p>
                 </div>
                 <div class="kpi-card red-top">
-                    <h4>Open Actions</h4>
-                    <div class="value">04</div>
-                    <p>2 Overdue [cite: 195, 197]</p>
+                    <h4>Open Major NCs</h4>
+                    <div class="value">01</div>
+                    <p>Ref: ST0096 COSHH</p>
                 </div>
             </section>
 
             <section class="data-section">
-                <div class="card-header">
-                    <h3>Recent Audit Activity</h3>
-                </div>
+                <h3>Live Tracker</h3>
                 <table class="st-table">
                     <thead>
                         <tr>
                             <th>Ref</th>
                             <th>Scope</th>
                             <th>Auditee</th>
-                            <th>Result</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -67,19 +60,10 @@
                     <tbody>
                         <tr class="urgent-row">
                             <td>ST0096</td>
-                            <td>COSHH Control [cite: 108]</td>
-                            <td>G. Seaborn [cite: 110]</td>
-                            <td><span class="pill pill-danger">Major NC</span> [cite: 191]</td>
-                            <td><span class="pill pill-open">OPEN</span></td>
-                            <td><button class="btn-sm">Review Actions</button></td>
-                        </tr>
-                        <tr>
-                            <td>ST0095</td>
-                            <td>Fire Safety - Depot</td>
-                            <td>N. Dobbs</td>
-                            <td><span class="pill pill-success">Conforming</span></td>
-                            <td>CLOSED</td>
-                            <td><button class="btn-sm">View Report</button></td>
+                            <td>COSHH Control</td>
+                            <td>G. Seaborn</td>
+                            <td><span class="pill pill-danger">Major NC</span></td>
+                            <td><button class="btn-sm" onclick="window.location.href='audit-plan.html'">View Shadow Audit</button></td>
                         </tr>
                     </tbody>
                 </table>
