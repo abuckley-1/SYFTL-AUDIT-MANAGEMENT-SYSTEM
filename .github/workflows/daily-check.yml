@@ -1,0 +1,12 @@
+name: Daily Audit Notification Check
+on:
+  schedule:
+    - cron: '0 9 * * *' # Runs daily at 9am
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Run Mailer Script
+        run: node scripts/autoMailer.js
