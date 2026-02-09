@@ -8,30 +8,47 @@
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-brand">
-                <img src="STLogo.jpg" alt="ST Logo" class="logo">
-                <h2>Sentinel AMS</h2>
-            </div>
+            <div class="sidebar-brand"><img src="STLogo.jpg" alt="Logo" class="logo"><h2>Sentinel</h2></div>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-link">📊 Dashboard</a>
-                <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
                 <a href="audit-plan.html" class="nav-link active">📅 2026 Audit Plan</a>
-                <a href="#" class="nav-link">🔙 Portal Home</a>
+                <a href="audit-form.html" class="nav-link">📝 Conduct Audit</a>
             </nav>
         </aside>
-
         <main class="main-content">
             <header class="top-header">
-                <div>
-                    <h1>Annual Audit Master Schedule</h1>
-                    <p>Compliance Target: 100% | Reference: ST0096 </p>
-                </div>
+                <h1>2026 Master Audit Schedule</h1>
+                <p>Status: Active | CC: N. Dobbs</p>
             </header>
-
-            <div class="calendar-grid" id="auditCalendar">
+            <div class="calendar-grid" id="planContainer">
                 </div>
         </main>
     </div>
-    <script src="scripts/planGenerator.js"></script>
+    <script>
+        const schedule = [
+            { month: "Jan", scope: "COSHH Shadow Audit", type: "SHADOW", ref: "ST0096-S" },
+            { month: "Feb", scope: "Fire Safety - Depot", type: "INTERNAL", ref: "ST0097" },
+            { month: "Mar", scope: "ISO 9001 Systems", type: "SYSTEM", ref: "ST0098" },
+            { month: "Apr", scope: "Contractors", type: "OPS", ref: "ST0099" },
+            { month: "May", scope: "ISO 14001 Env", type: "SYSTEM", ref: "ST0100" },
+            { month: "Jun", scope: "Competence", type: "HR", ref: "ST0101" },
+            { month: "Jul", scope: "ISO 45001 H&S", type: "SYSTEM", ref: "ST0102" },
+            { month: "Aug", scope: "Risk Review", type: "RISK", ref: "ST0103" },
+            { month: "Sep", scope: "Security", type: "SEC", ref: "ST0104" },
+            { month: "Oct", scope: "Incidents", type: "SAFETY", ref: "ST0105" },
+            { month: "Nov", scope: "Stores/PPE", type: "INTERNAL", ref: "ST0106" },
+            { month: "Dec", scope: "Mgmt Review", type: "EXEC", ref: "ST0107" }
+        ];
+
+        const html = schedule.map(a => `
+            <div class="month-card ${a.type === 'SHADOW' ? 'shadow-critical' : ''}">
+                <div class="month-label">${a.month}</div>
+                <strong>${a.scope}</strong>
+                <p>${a.ref}</p>
+                <span class="type-tag">${a.type}</span>
+            </div>
+        `).join('');
+        document.getElementById('planContainer').innerHTML = html;
+    </script>
 </body>
 </html>
