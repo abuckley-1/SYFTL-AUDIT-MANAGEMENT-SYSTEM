@@ -169,3 +169,49 @@ const PlanGenerator = {
 };
 
 document.addEventListener('DOMContentLoaded', () => PlanGenerator.loadYear());
+
+async pushToMaster() {
+    if (!confirm("Confirm upload to Supertram AMS Master Memory?")) return;
+
+    const year = document.getElementById('yearSelector').value;
+    const token = "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"; 
+    const repo = "abuckley-1/SYFTL-AUDIT-MANAGEMENT-SYSTEM";
+    const path = `data/schedules_${year}.json`;
+
+    try {
+        // 1. Get the latest file state
+        const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        const fileData = await getRes.json();
+
+        // 2. Push the data update
+        const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: `SAMS Update: ${year} Schedule`,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(this.currentYearData, null, 2)))),
+                sha: fileData.sha
+            })
+        });
+
+        if (putRes.ok) {
+            // 3. THE FIX: This specific command triggers the Master Sync robot
+            await fetch(`https://api.github.com/repos/${repo}/actions/workflows/master-sync.yml/dispatches`, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json' 
+                },
+                body: JSON.stringify({ ref: 'main' })
+            });
+
+            alert("✅ SUCCESS: Data saved and Master Sync triggered!");
+            localStorage.removeItem(`sentinel_backup_${year}`);
+            location.reload(); 
+        }
+    } catch (err) {
+        alert("❌ Sync Error: GitHub is currently busy. Please try again.");
+    }
+}
