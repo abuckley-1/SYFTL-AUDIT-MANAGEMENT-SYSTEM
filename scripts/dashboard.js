@@ -1,85 +1,101 @@
+/**
+ * Supertram AMS - Dashboard Logic
+ * Visualizes audit data and compliance KPIs
+ */
 const Dashboard = {
+    chart: null,
+
     async init() {
+        console.log("SAMS: Initializing Dashboard...");
         try {
-            const res = await fetch('./data/schedules_2026.json');
+            // Universal Path to the Master Memory
+            const res = await fetch('data/schedules_2026.json');
+            if (!res.ok) throw new Error("Could not load 2026 schedule");
+            
             const data = await res.json();
-            this.updateStats(data);
-            this.renderTrendChart(data);
-            this.renderLeaderboard(data);
-        } catch (e) { console.error("Data offline", e); }
+            this.renderStats(data);
+            this.renderChart(data);
+            this.updateDate();
+        } catch (e) {
+            console.error("Dashboard Load Error:", e);
+        }
     },
 
-    updateStats(data) {
-        const stats = {
-            total: data.length,
-            closed: data.filter(a => a.status === 'CLOSED').length,
-            overdue: data.filter(a => a.status === 'OVERDUE').length,
-            open: data.filter(a => a.status === 'OPEN').length
-        };
-
-        document.getElementById('totalSchedules').innerText = stats.total;
-        document.getElementById('completionRate').innerText = Math.round((stats.closed / stats.total) * 100) + "%";
-        document.getElementById('openActions').innerText = stats.open;
-        document.getElementById('overdueCount').innerText = stats.overdue;
+    updateDate() {
+        const now = new Date();
+        document.getElementById('currentDate').innerText = now.toLocaleDateString('en-GB', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
     },
 
-    renderTrendChart(data) {
-        const ctx = document.getElementById('trendChart').getContext('2d');
-        // Mocking 2025 data for comparison logic
-        new Chart(ctx, {
-            type: 'line',
+    renderStats(data) {
+        // 1. Completion Rate: % of audits that are 'CLOSED'
+        const totalAudits = data.filter(a => a.title !== 'none' && a.title !== '').length;
+        const closedAudits = data.filter(a => a.status === 'CLOSED').length;
+        const rate = totalAudits > 0 ? Math.round((closedAudits / totalAudits) * 100) : 0;
+        
+        document.getElementById('completionRate').innerText = `${rate}%`;
+
+        // 2. Major NC Count: Includes those auto-issued by the timer
+        const majorNCs = data.filter(a => 
+            a.status === 'MAJOR NC (AD-HOC)' || 
+            (a.score && parseInt(a.score) < 40)
+        ).length;
+        
+        const ncDisplay = document.getElementById('majorNCs');
+        ncDisplay.innerText = majorNCs;
+        ncDisplay.style.color = majorNCs > 0 ? "#ff4d4d" : "#4ade80";
+
+        // 3. Overdue Actions: Audits that are past their month but not closed
+        const currentMonthIdx = new Date().getMonth();
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        
+        const overdue = data.filter((a, i) => {
+            const auditMonthIdx = months.indexOf(a.month);
+            return auditMonthIdx < currentMonthIdx && a.status !== 'CLOSED';
+        }).forEach(a => console.warn(`Overdue Audit Detected: ${a.ref}`));
+    },
+
+    renderChart(data) {
+        const ctx = document.getElementById('complianceChart').getContext('2d');
+        
+        // Prepare data for the chart: Compliance scores by month
+        const monthlyData = data.filter(a => a.title !== 'none').map(a => ({
+            month: a.month,
+            score: a.score ? parseInt(a.score) : 0
+        }));
+
+        if (this.chart) this.chart.destroy();
+
+        this.chart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                labels: monthlyData.map(d => d.month),
                 datasets: [{
-                    label: '2026 Completion',
-                    data: [90, 85, 95, 88, 92, 100],
-                    borderColor: '#F26522',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(242, 101, 34, 0.1)'
-                }, {
-                    label: '2025 (Prev Year)',
-                    data: [70, 75, 80, 78, 85, 88],
-                    borderColor: '#1D3C6E',
-                    borderDash: [5, 5],
-                    tension: 0.4
+                    label: 'Compliance Score %',
+                    data: monthlyData.map(d => d.score),
+                    backgroundColor: monthlyData.map(d => {
+                        if (d.score >= 85) return '#4ade80'; // Green
+                        if (d.score >= 65) return '#facc15'; // Yellow
+                        if (d.score > 0) return '#fb923c';   // Orange
+                        return '#1e293b';                    // Empty/Dark
+                    }),
+                    borderRadius: 5
                 }]
             },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
         });
-    },
-
-    renderLeaderboard(data) {
-        const depts = {};
-        data.forEach(a => {
-            if (!depts[a.dept]) depts[a.dept] = { total: 0, closed: 0 };
-            depts[a.dept].total++;
-            if (a.status === 'CLOSED') depts[a.dept].closed++;
-        });
-
-        const container = document.getElementById('deptLeaderboard');
-        container.innerHTML = Object.entries(depts).map(([name, stat]) => {
-            const pct = Math.round((stat.closed / stat.total) * 100);
-            return `
-                <div class="leader-row">
-                    <span class="leader-name">${name}</span>
-                    <div class="leader-bar"><div class="fill" style="width:${pct}%"></div></div>
-                    <span class="leader-pct">${pct}%</span>
-                </div>`;
-        }).join('');
     }
 };
-Dashboard.init();
 
-checkDeadlines(audit) {
-    if (!audit.notificationSent) return "PLANNED";
-    
-    const issuedDate = new Date(audit.notificationSent);
-    const today = new Date();
-    const diffDays = Math.ceil((today - issuedDate) / (1000 * 60 * 60 * 24));
-
-    if (diffDays > 14 && audit.status !== "CLOSED") {
-        return "MAJOR NC (AD-HOC) - AUTO ISSUED";
-    }
-    return `ACTIVE - ${14 - diffDays} DAYS REMAINING`;
-}
+document.addEventListener('DOMContentLoaded', () => Dashboard.init());
