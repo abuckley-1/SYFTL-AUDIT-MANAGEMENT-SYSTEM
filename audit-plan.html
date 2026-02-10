@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audit Schedules - Sentinel AMS</title>
+    <title>SAMS | Audit Schedule</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <img src="https://www.supertram.com/images/logo.png" alt="Supertram Logo" class="sidebar-logo">
-                <h2 class="brand-name">Sentinel AMS</h2>
+                <h2 class="brand-name">Supertram AMS</h2>
             </div>
             <nav class="side-nav">
-                <a href="index.html" class="nav-link">📊 Dashboard</a>
+                <a href="index.html" class="nav-link">📈 Dashboard</a>
                 <a href="audit-plan.html" class="nav-link active">📅 Audit Schedules</a>
                 <a href="conduct-audit.html" class="nav-link">📝 Conduct Audit</a>
             </nav>
@@ -22,80 +21,27 @@
 
         <main class="main-content">
             <header class="top-header">
-                <h1>Audit Schedules</h1>
-                <div class="header-controls">
-                    <select id="yearSelector" class="year-dropdown" onchange="PlanGenerator.loadYear()">
-                        <option value="2026">2026</option>
-                        <option value="2027">2027</option>
-                    </select>
-                    <button class="btn-login" id="loginBtn" onclick="PlanGenerator.showLogin()">🔒 Audit Team Login</button>
-                </div>
+                <h1>Annual Audit Schedule 2026</h1>
+                <button class="btn-primary" onclick="PlanGenerator.generateNewPlan()">Generate/Reset Plan</button>
             </header>
 
-            <div class="calendar-grid" id="planContainer"></div>
-
-            <div id="syncContainer" class="sync-footer" style="display:none; text-align:center; padding: 40px 0;">
-                <button class="btn-save" style="max-width:400px; background-color: #F26522;" onclick="PlanGenerator.pushToMaster()">
-                    🚀 Push Changes to Master Memory
-                </button>
+            <div class="glass-card table-container">
+                <table id="scheduleTable">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Audit Title</th>
+                            <th>Reference</th>
+                            <th>Dept</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleBody"></tbody>
+                </table>
             </div>
         </main>
     </div>
-
-    <div id="loginModal" class="modal-overlay">
-        <div class="modal-content small-modal">
-            <h2>Admin Authentication</h2>
-            <div class="form-group">
-                <label>Audit Team Password</label>
-                <input type="password" id="adminPass" placeholder="Enter Password">
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="PlanGenerator.closeLogin()">Cancel</button>
-                <button class="btn-save" onclick="PlanGenerator.authenticateAdmin()">Login</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="auditModal" class="modal-overlay">
-        <div class="modal-content">
-            <h2>Audit Details</h2>
-            <div class="form-group">
-                <label>Audit Title</label>
-                <input type="text" id="modalTitle">
-            </div>
-            <div class="form-group">
-                <label>Auditee Name</label>
-                <input type="text" id="modalAuditee">
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <div class="form-group" style="flex: 1;">
-                    <label>Month</label>
-                    <select id="modalMonth"></select>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>Reporting Period</label>
-                    <input type="text" id="modalPeriod" placeholder="e.g. P10">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Department</label>
-                <select id="modalDept"></select>
-            </div>
-            <div class="form-group">
-                <label>Audit Type</label>
-                <select id="modalType"></select>
-            </div>
-            <div class="form-group">
-                <label>Status</label>
-                <select id="modalStatus"></select>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="PlanGenerator.closeModal()">Cancel</button>
-                <button class="btn-save" onclick="PlanGenerator.saveModal()">Save Changes</button>
-            </div>
-        </div>
-    </div>
-
     <script src="scripts/planGenerator.js"></script>
 </body>
 </html>
