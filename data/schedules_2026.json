@@ -1,14 +1,68 @@
 [
-  { "month": "Jan", "title": "none", "ref": "ST0096/NONE/2026", "auditee": "n/a", "dept": "n/a", "status": "Closed", "type": "Internal" },
-  { "month": "Feb", "title": "Waste", "ref": "ST0096/WASTE/2026", "auditee": "M. Walch", "dept": "Operations", "status": "Open", "type": "Internal" },
-  { "month": "Mar", "title": "none", "ref": "ST0096/NONE/2026", "auditee": "n/a", "dept": "n/a", "status": "Closed", "type": "Internal" },
-  { "month": "Apr", "title": "Stores", "ref": "ST0096/STORES/2026", "auditee": "N. Dobbs", "dept": "Stores", "status": "Open", "type": "Internal" },
-  { "month": "May", "title": "Housekeeping", "ref": "ST0096/HOUSEKEEPING/2026", "auditee": "All Dept Managers", "dept": "All", "status": "Open", "type": "Internal" },
-  { "month": "Jun", "title": "none", "ref": "ST0096/NONE/2026", "auditee": "n/a", "dept": "n/a", "status": "Closed", "type": "Internal" },
-  { "month": "Jul", "title": "Environmental Aspects & Impacts", "ref": "ST0096/ENVIRONMENTALASPECTSIMPACTS/2026", "auditee": "J. Keeling", "dept": "SHEQ", "status": "Open", "type": "Internal" },
-  { "month": "Aug", "title": "Office Safety", "ref": "ST0096/OFFICESAFETY/2026", "auditee": "All Dept Managers", "dept": "All", "status": "Open", "type": "Internal" },
-  { "month": "Sep", "title": "EMS Criteria", "ref": "ST0096/EMSCRITERIA/2026", "auditee": "J. Keeling", "dept": "SHEQ", "status": "Open", "type": "Internal" },
-  { "month": "Oct", "title": "DSE", "ref": "ST0096/DSE/2026", "auditee": "All Dept Managers", "dept": "All", "status": "Open", "type": "Internal" },
-  { "month": "Nov", "title": "LOLER", "ref": "ST0096/LOLER/2026", "auditee": "N. Dobbs", "dept": "Engineering", "status": "Open", "type": "Internal" },
-  { "month": "Dec", "title": "Security (Cyber & Physical)", "ref": "ST0096/SECURITYCYBERPHYSICAL/2026", "auditee": "N. Dobbs", "dept": "Facilities", "status": "Open", "type": "Internal" }
+  {
+    "month": "JAN",
+    "title": "Health & Safety Induction",
+    "ref": "ST0096/HS-IND/2026",
+    "dept": "Human Resources",
+    "auditee": "J. Bloggs",
+    "email": "hr@supertram.com",
+    "status": "CLOSED",
+    "score": "92",
+    "lastUpdated": "2026-01-25T10:00:00Z"
+  },
+  {
+    "month": "FEB",
+    "title": "WASTE",
+    "ref": "ST0096/WASTE/2026",
+    "dept": "Depot Operations",
+    "auditee": "A. Smith",
+    "email": "ops@supertram.com",
+    "status": "PLANNED",
+    "score": "0",
+    "lastUpdated": ""
+  },
+  {
+    "month": "MAR",
+    "title": "Track Maintenance",
+    "ref": "ST0096/TRACK/2026",
+    "dept": "Infrastructure",
+    "auditee": "D. Jones",
+    "email": "infra@supertram.com",
+    "status": "PLANNED",
+    "score": "0",
+    "lastUpdated": ""
+  },
+  {
+    "month": "APR",
+    "title": "PPE Compliance",
+    "ref": "ST0096/PPE/2026",
+    "dept": "Rolling Stock",
+    "auditee": "M. Taylor",
+    "email": "maintenance@supertram.com",
+    "status": "PLANNED",
+    "score": "0",
+    "lastUpdated": ""
+  },
+  {
+    "month": "MAY",
+    "title": "Chemical Handling",
+    "ref": "ST0096/CHEM/2026",
+    "dept": "Cleaning Services",
+    "auditee": "S. Wilson",
+    "email": "cleaning@supertram.com",
+    "status": "PLANNED",
+    "score": "0",
+    "lastUpdated": ""
+  },
+  {
+    "month": "JUN",
+    "title": "Fire Safety",
+    "ref": "ST0096/FIRE/2026",
+    "dept": "Facilities",
+    "auditee": "R. Evans",
+    "email": "facilities@supertram.com",
+    "status": "PLANNED",
+    "score": "0",
+    "lastUpdated": ""
+  }
 ]
