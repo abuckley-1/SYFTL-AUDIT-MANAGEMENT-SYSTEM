@@ -10,7 +10,6 @@
     <div class="app-container">
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <img src="https://www.supertram.com/images/logo.png" alt="Supertram" class="sidebar-logo">
                 <h2 class="brand-name">Supertram AMS</h2>
             </div>
             <nav class="side-nav">
@@ -23,12 +22,11 @@
         <main class="main-content">
             <header class="top-header">
                 <h1>Perform Internal Audit</h1>
-                <p class="subtitle">Record findings and compliance scores</p>
             </header>
 
             <section class="glass-card">
                 <div class="form-group">
-                    <label>Select Scheduled Audit</label>
+                    <label>Select Audit From Schedule</label>
                     <select id="auditSelector" onchange="AuditEngine.loadAuditDetails()">
                         <option>Loading schedules...</option>
                     </select>
@@ -36,32 +34,23 @@
 
                 <div id="auditForm" style="display:none; margin-top: 20px;">
                     <div class="audit-meta-grid">
-                        <div class="meta-item"><strong>Ref:</strong> <span id="displayRef"></span></div>
-                        <div class="meta-item"><strong>Dept:</strong> <span id="displayDept"></span></div>
+                        <div class="meta-item"><strong>Reference:</strong> <span id="displayRef"></span></div>
+                        <div class="meta-item"><strong>Department:</strong> <span id="displayDept"></span></div>
                     </div>
 
-                    <hr>
-
                     <div class="findings-area">
-                        <label>Executive Summary / Observations</label>
-                        <textarea id="observations" placeholder="Describe what was found during the audit..."></textarea>
-
+                        <label>Observations</label>
+                        <textarea id="observations" placeholder="Enter audit findings..."></textarea>
+                        
                         <div class="score-grid">
                             <div class="form-group">
                                 <label>Compliance Score (%)</label>
                                 <input type="number" id="complianceScore" min="0" max="100" value="100">
                             </div>
-                            <div class="form-group">
-                                <label>Non-Conformances Found</label>
-                                <input type="number" id="ncCount" min="0" value="0">
-                            </div>
                         </div>
-
-                        <label>Corrective Actions Required</label>
-                        <textarea id="actions" placeholder="List required improvements..."></textarea>
                     </div>
 
-                    <button class="btn-primary" onclick="AuditEngine.submitAudit()">Submit Final Audit & Sync</button>
+                    <button class="btn-primary" onclick="AuditEngine.submitAudit()">Submit to Master Memory</button>
                 </div>
             </section>
         </main>
