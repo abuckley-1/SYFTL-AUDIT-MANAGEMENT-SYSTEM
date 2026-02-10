@@ -1,42 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supertram | Compliance Dashboard</title>
+    <title>SAMS Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <h2 class="brand-name">Supertram AMS</h2>
-            </div>
-            <nav class="side-nav">
-                <a href="index.html" class="nav-link active">📈 Dashboard</a>
-                <a href="audit-plan.html" class="nav-link">📅 Audit Schedules</a>
-                <a href="conduct-audit.html" class="nav-link">📝 Conduct Audit</a>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <header class="top-header">
-                <h1>Safety & Standards Dashboard</h1>
-                <p class="date-display" id="currentDate"></p>
-            </header>
-
-            <div class="stats-grid">
-                <div class="stat-card"><h3>Audit Completion</h3><p id="completionRate">0%</p></div>
-                <div class="stat-card"><h3>Major NCs</h3><p id="majorNCs">0</p></div>
-                <div class="stat-card"><h3>Overdue Actions</h3><p id="overdueCount">0</p></div>
-            </div>
-
-            <section class="chart-section glass-card">
-                <canvas id="complianceChart"></canvas>
-            </section>
-        </main>
+    <div class="sidebar">
+        <h2>Supertram</h2>
+        <a href="index.html" class="nav-link active">📈 Dashboard</a>
+        <a href="schedule.html" class="nav-link">📅 Annual Plan</a>
+        <a href="questionnaire.html" class="nav-link">📝 Questionnaire</a>
+        <a href="report.html" class="nav-link">📋 Reports</a>
     </div>
-    <script src="scripts/dashboard.js"></script>
+    <div class="main">
+        <h1>Safety Health Environment & Quality</h1>
+        <div class="card"><canvas id="mainChart" height="100"></canvas></div>
+    </div>
 </body>
 </html>
