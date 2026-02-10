@@ -1,13 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>SAMS | Professional Audit Report</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .report-page { background: white; width: 210mm; min-height: 297mm; padding: 20px; margin: 20px auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .cover-page { text-align: center; padding-top: 100px; border: 10px solid var(--supertram-blue); height: 260mm; }
-        .risk-table { width: 100%; border: 1px solid #ddd; margin: 20px 0; }
-        .risk-table th { background: #f4f4f4; }
-        .sign-off { margin-top: 50px; display: flex; justify-content: space-between; }
-        @media print { .
+        .report-output { background: white; padding: 50px; min-height: 1000px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .risk-box { border-left: 5px solid var(--supertram-pink); padding: 10px; margin: 10px 0; background: #f9f9f9; }
+        @media print { .sidebar, .btn { display: none; } .main { margin: 0; } }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Supertram</h2>
+        <a href="index.html" class="nav-link">📈 Dashboard</a>
+        <a href="report.html" class="nav-link active">📋 Reports</a>
+    </div>
+    <div class="main">
+        <header style="display:flex; justify-content: space-between; align-items: center;">
+            <h1>Report Generation</h1>
+            <button class="btn btn-primary" onclick="window.print()">Print to PDF / Issue</button>
+        </header>
+
+        <div class="card">
+            <label>Select Audit to Report:</label>
+            <select id="reportSelect" onchange="ReportGenerator.createReport(this.value)">
+                <option value="">-- Select Completed Audit --</option>
+                <option value="ST0096/WASTE/2026">WASTE - FEB 2026</option>
+            </select>
+        </div>
+
+        <div id="reportOutput" class="report-output">
+            <p style="text-align:center; color:#999;">Select an audit to generate the professional report...</p>
+        </div>
+    </div>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/reportGenerator.js"></script>
+</body>
+</html>
