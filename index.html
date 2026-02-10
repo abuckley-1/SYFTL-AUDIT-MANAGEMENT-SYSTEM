@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentinel AMS | Dashboard</title>
+    <title>Supertram | Compliance Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -11,11 +11,10 @@
     <div class="app-container">
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <img src="https://www.supertram.com/images/logo.png" alt="Supertram Logo" class="sidebar-logo">
-                <h2 class="brand-name">Sentinel AMS</h2>
+                <h2 class="brand-name">Supertram AMS</h2>
             </div>
             <nav class="side-nav">
-                <a href="index.html" class="nav-link active">📊 Dashboard</a>
+                <a href="index.html" class="nav-link active">📈 Dashboard</a>
                 <a href="audit-plan.html" class="nav-link">📅 Audit Schedules</a>
                 <a href="conduct-audit.html" class="nav-link">📝 Conduct Audit</a>
             </nav>
@@ -23,57 +22,19 @@
 
         <main class="main-content">
             <header class="top-header">
-                <div class="header-title">
-                    <h1>Compliance Intelligence</h1>
-                    <p class="subtitle">Real-time Safety & Quality Oversight</p>
-                </div>
-                <div class="sync-indicator">
-                    <span class="pulse-dot"></span> Master Memory: <strong id="syncStatus">CONNECTED</strong>
-                </div>
+                <h1>Safety & Standards Dashboard</h1>
+                <p class="date-display" id="currentDate"></p>
             </header>
 
-            <div class="tile-grid">
-                <div class="stat-tile primary">
-                    <div class="tile-icon">📋</div>
-                    <div class="tile-data">
-                        <span id="totalSchedules" class="tile-value">--</span>
-                        <span class="tile-label">Annual Audits</span>
-                    </div>
-                </div>
-                <div class="stat-tile success">
-                    <div class="tile-icon">🎯</div>
-                    <div class="tile-data">
-                        <span id="completionRate" class="tile-value">--%</span>
-                        <span class="tile-label">Completion KPI</span>
-                    </div>
-                </div>
-                <div class="stat-tile warning">
-                    <div class="tile-icon">⏳</div>
-                    <div class="tile-data">
-                        <span id="openActions" class="tile-value">--</span>
-                        <span class="tile-label">Pending Reviews</span>
-                    </div>
-                </div>
-                <div class="stat-tile danger">
-                    <div class="tile-icon">🚨</div>
-                    <div class="tile-data">
-                        <span id="overdueCount" class="tile-value">--</span>
-                        <span class="tile-label">Critical Overdue</span>
-                    </div>
-                </div>
+            <div class="stats-grid">
+                <div class="stat-card"><h3>Audit Completion</h3><p id="completionRate">0%</p></div>
+                <div class="stat-card"><h3>Major NCs</h3><p id="majorNCs">0</p></div>
+                <div class="stat-card"><h3>Overdue Actions</h3><p id="overdueCount">0</p></div>
             </div>
 
-            <div class="analytics-row">
-                <div class="chart-container main-chart">
-                    <h3>Compliance Trends (2025 vs 2026)</h3>
-                    <canvas id="trendChart"></canvas>
-                </div>
-                <div class="chart-container side-list">
-                    <h3>Departmental Leaderboard</h3>
-                    <div id="deptLeaderboard" class="leaderboard-list">
-                        </div>
-                </div>
-            </div>
+            <section class="chart-section glass-card">
+                <canvas id="complianceChart"></canvas>
+            </section>
         </main>
     </div>
     <script src="scripts/dashboard.js"></script>
